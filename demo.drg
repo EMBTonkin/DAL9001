@@ -1,0 +1,223 @@
+<?xml version='1.0' encoding='UTF-8'?> 
+<drg>
+  <Family>
+  <title>Master Demo Group</title> 
+  
+    
+    <Dragon>
+      <id>1</id>
+      <name>Scale</name>
+      <parents></parents> 
+      <children></children>
+      
+      <exalted>False</exalted>
+      <matingType>True</matingType>
+      
+      <species>Mirror</species> 
+      <primary>Blue Basic</primary>
+      <secondary>Blue Basic</secondary>
+      <tertiary>Blue Underbelly</tertiary>
+      
+      <comment>Favorite Dragon
+</comment>
+      
+      <DAL9000> // here is some stuff my program would have.
+        <image>194792.gif</image>
+        <gen>1</gen>
+        
+        <anestors2></anestors2>
+        <anestors3></anestors3>
+        <anestors4></anestors4>
+        <anestors5></anestors5>
+        
+        <decendants2>6</decendants2>
+        <decendants3></decendants3>
+        <decendants4></decendants4>
+        <decendants5></decendants5>
+        
+        <xPos>200</xPos>
+        <yPos>100</yPos>
+      </DAL9000>
+    </Dragon>
+  
+  	<Dragon>
+      <id>2</id>
+      <name>Floof</name>
+      <parents></parents> 
+      <children></children>
+      
+      <exalted>False</exalted>
+      <matingType>False</matingType>
+      
+      <species>Tundra</species> 
+      <primary>Red Iridescent</primary>
+      <secondary>Red Shimmer</secondary>
+      <tertiary>Red Glimmer</tertiary>
+      
+      <comment>The floofiest of all dragons.
+</comment>
+      
+      <DAL9000> // here is some stuff my program would have.
+        <image>194792.gif</image>
+        <gen>1</gen>
+        
+        <anestors2></anestors2>
+        <anestors3></anestors3>
+        <anestors4></anestors4>
+        <anestors5></anestors5>
+        
+        <decendants2>6</decendants2>
+        <decendants3></decendants3>
+        <decendants4></decendants4>
+        <decendants5></decendants5>
+        
+        <xPos>200</xPos>
+        <yPos>100</yPos>
+      </DAL9000>
+    </Dragon>
+    
+    <Dragon>
+      <id>3</id>
+      <name>Oi</name>
+      <parents>1 2</parents> 
+      <children>1 2</children>
+      
+      <exalted>False</exalted>
+      <matingType>True</matingType>
+      
+      <species>Tundra</species> 
+      <primary>Blue Basic</primary>
+      <secondary>White Basic</secondary>
+      <tertiary>Red Underbelly</tertiary>
+      
+      <comment>My colors are the French Flag!  cool
+</comment>
+      
+      <DAL9000> // here is some stuff my program would have.
+        <image>194792.gif</image>
+        <gen>2</gen>
+        
+        <anestors2></anestors2>
+        <anestors3></anestors3>
+        <anestors4></anestors4>
+        <anestors5></anestors5>
+        
+        <decendants2></decendants2>
+        <decendants3></decendants3>
+        <decendants4></decendants4>
+        <decendants5></decendants5>
+        
+        <xPos>200</xPos>
+        <yPos>100</yPos>
+      </DAL9000>
+    </Dragon>
+    <Dragon>
+      <id>4</id>
+      <name>Twin</name>
+      <parents>1 2</parents> 
+      <children>1 2</children>
+      
+      <exalted>False</exalted>
+      <matingType>True</matingType>
+      
+      <species>Tundra</species> 
+      <primary>Blue Basic</primary>
+      <secondary>White Basic</secondary>
+      <tertiary>Red Underbelly</tertiary>
+      
+      <comment>It's a Crimspiracy.
+</comment>
+      
+      <DAL9000> // here is some stuff my program would have.
+        <image>194792.gif</image>
+        <gen>2</gen>
+        
+        <anestors2></anestors2>
+        <anestors3></anestors3>
+        <anestors4></anestors4>
+        <anestors5></anestors5>
+        
+        <decendants2></decendants2>
+        <decendants3></decendants3>
+        <decendants4></decendants4>
+        <decendants5></decendants5>
+        
+        <xPos>200</xPos>
+        <yPos>100</yPos>
+      </DAL9000>
+    </Dragon>
+    <Dragon>
+      <id>5</id>
+      <name>Purplum</name>
+      <parents></parents> 
+      <children></children>
+      
+      <exalted>False</exalted>
+      <matingType>False</matingType>
+      
+      <species>Mirror</species> 
+      <primary>Royal Basic</primary>
+      <secondary>Royal Basic</secondary>
+      <tertiary>Purple Underbelly</tertiary>
+      
+      <comment>My favorite color!
+
+</comment>
+      
+      <DAL9000> // here is some stuff my program would have.
+        <image>194792.gif</image>
+        <gen>1</gen>
+        
+        <anestors2></anestors2>
+        <anestors3></anestors3>
+        <anestors4></anestors4>
+        <anestors5></anestors5>
+        
+        <decendants2></decendants2>
+        <decendants3></decendants3>
+        <decendants4></decendants4>
+        <decendants5></decendants5>
+        
+        <xPos>200</xPos>
+        <yPos>100</yPos>
+      </DAL9000>
+    </Dragon>
+    <Dragon>
+      <id>6</id>
+      <name>FloofJR</name>
+      <parents>3 5</parents> 
+      <children>3 5</children>
+      
+      <exalted>False</exalted>
+      <matingType>True</matingType>
+      
+      <species>Mirror</species> 
+      <primary>White Basic</primary>
+      <secondary>White Basic</secondary>
+      <tertiary>Purple Underbelly</tertiary>
+      
+      <comment>XXY!
+
+</comment>
+      
+      <DAL9000> // here is some stuff my program would have.
+        <image>194792.gif</image>
+        <gen>3</gen>
+        
+        <anestors2>1 2</anestors2>
+        <anestors3></anestors3>
+        <anestors4></anestors4>
+        <anestors5></anestors5>
+        
+        <decendants2></decendants2>
+        <decendants3></decendants3>
+        <decendants4></decendants4>
+        <decendants5></decendants5>
+        
+        <xPos>200</xPos>
+        <yPos>100</yPos>
+      </DAL9000>
+    </Dragon>
+  </Family>
+
+</drg>
