@@ -25,15 +25,15 @@
         <image>194792.gif</image>
         <gen>1</gen>
         
-        <anestors2></anestors2>
-        <anestors3></anestors3>
-        <anestors4></anestors4>
-        <anestors5></anestors5>
+        <ancestors2></ancestors2>
+        <ancestors3></ancestors3>
+        <ancestors4></ancestors4>
+        <ancestors5></ancestors5>
         
-        <decendants2>6</decendants2>
-        <decendants3></decendants3>
-        <decendants4></decendants4>
-        <decendants5></decendants5>
+        <descendants2>6</descendants2>
+        <descendants3></descendants3>
+        <descendants4></descendants4>
+        <descendants5></descendants5>
         
         <xPos>200</xPos>
         <yPos>100</yPos>
@@ -61,15 +61,15 @@
         <image>194792.gif</image>
         <gen>1</gen>
         
-        <anestors2></anestors2>
-        <anestors3></anestors3>
-        <anestors4></anestors4>
-        <anestors5></anestors5>
+        <ancestors2></ancestors2>
+        <ancestors3></ancestors3>
+        <ancestors4></ancestors4>
+        <ancestors5></ancestors5>
         
-        <decendants2>6</decendants2>
-        <decendants3></decendants3>
-        <decendants4></decendants4>
-        <decendants5></decendants5>
+        <descendants2>6</descendants2>
+        <descendants3></descendants3>
+        <descendants4></descendants4>
+        <descendants5></descendants5>
         
         <xPos>200</xPos>
         <yPos>100</yPos>
@@ -97,15 +97,15 @@
         <image>194792.gif</image>
         <gen>2</gen>
         
-        <anestors2></anestors2>
-        <anestors3></anestors3>
-        <anestors4></anestors4>
-        <anestors5></anestors5>
+        <ancestors2></ancestors2>
+        <ancestors3></ancestors3>
+        <ancestors4></ancestors4>
+        <ancestors5></ancestors5>
         
-        <decendants2></decendants2>
-        <decendants3></decendants3>
-        <decendants4></decendants4>
-        <decendants5></decendants5>
+        <descendants2></descendants2>
+        <descendants3></descendants3>
+        <descendants4></descendants4>
+        <descendants5></descendants5>
         
         <xPos>200</xPos>
         <yPos>100</yPos>
@@ -132,15 +132,15 @@
         <image>194792.gif</image>
         <gen>2</gen>
         
-        <anestors2></anestors2>
-        <anestors3></anestors3>
-        <anestors4></anestors4>
-        <anestors5></anestors5>
+        <ancestors2></ancestors2>
+        <ancestors3></ancestors3>
+        <ancestors4></ancestors4>
+        <ancestors5></ancestors5>
         
-        <decendants2></decendants2>
-        <decendants3></decendants3>
-        <decendants4></decendants4>
-        <decendants5></decendants5>
+        <descendants2></descendants2>
+        <descendants3></descendants3>
+        <descendants4></descendants4>
+        <descendants5></descendants5>
         
         <xPos>200</xPos>
         <yPos>100</yPos>
@@ -168,15 +168,15 @@
         <image>194792.gif</image>
         <gen>1</gen>
         
-        <anestors2></anestors2>
-        <anestors3></anestors3>
-        <anestors4></anestors4>
-        <anestors5></anestors5>
+        <ancestors2></ancestors2>
+        <ancestors3></ancestors3>
+        <ancestors4></ancestors4>
+        <ancestors5></ancestors5>
         
-        <decendants2></decendants2>
-        <decendants3></decendants3>
-        <decendants4></decendants4>
-        <decendants5></decendants5>
+        <descendants2></descendants2>
+        <descendants3></descendants3>
+        <descendants4></descendants4>
+        <descendants5></descendants5>
         
         <xPos>200</xPos>
         <yPos>100</yPos>
@@ -204,15 +204,15 @@
         <image>194792.gif</image>
         <gen>3</gen>
         
-        <anestors2>1 2</anestors2>
-        <anestors3></anestors3>
-        <anestors4></anestors4>
-        <anestors5></anestors5>
+        <ancestors2>1 2</ancestors2>
+        <ancestors3></ancestors3>
+        <ancestors4></ancestors4>
+        <ancestors5></ancestors5>
         
-        <decendants2></decendants2>
-        <decendants3></decendants3>
-        <decendants4></decendants4>
-        <decendants5></decendants5>
+        <descendants2></descendants2>
+        <descendants3></descendants3>
+        <descendants4></descendants4>
+        <descendants5></descendants5>
         
         <xPos>200</xPos>
         <yPos>100</yPos>
