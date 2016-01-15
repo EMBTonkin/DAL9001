@@ -30,6 +30,12 @@ import org.w3c.dom.NodeList;
 import java.io.File;
 
 
+/**
+ * Dragon class, contains dragon information and streamlines data access and manipulation<br>
+ * DAL9001
+ * @author Lizzie Tonkin
+ * @author ADD YOUR NAME OR FAKE NAME HERE
+ */ 
 public class Dragon{
 	
 	private Element us; // Us, that is this dragon.  The XML node
@@ -152,11 +158,26 @@ public class Dragon{
 	 */
 	public void setExalted(boolean exalted){
 		us.getElementsByTagName("exalted").item(0).setTextContent(String.valueOf(exalted));
-		
 	}
 	
 	
+	/**
+	 * Get the mating type of the dragon.  True for female, False for male
+	 * 
+	 * @return Boolean True for female, False for male
+	 */
+	public boolean getMatingType(){
+		return Boolean.parseBoolean(us.getElementsByTagName("matingType").item(0).getTextContent());	
+	}
 	
+	/**
+	 * Set the mating type of the dragon.  True for female, False for male
+	 * 
+	 * @param exalted Boolean True for female, False for male
+	 */
+	public void setMatingType(boolean matingType){
+		us.getElementsByTagName("matingType").item(0).setTextContent(String.valueOf(matingType));
+	}
 	
 	
 	
