@@ -8,7 +8,7 @@
       <id>1</id>
       <name>Scale</name>
       <parents></parents> 
-      <children></children>
+      <children>3 4</children>
       
       <exalted>False</exalted>
       <matingType>True</matingType>
@@ -44,7 +44,7 @@
       <id>2</id>
       <name>Floof</name>
       <parents></parents> 
-      <children></children>
+      <children>3 4</children>
       
       <exalted>False</exalted>
       <matingType>False</matingType>
@@ -80,7 +80,7 @@
       <id>3</id>
       <name>Oi</name>
       <parents>1 2</parents> 
-      <children>1 2</children>
+      <children>6</children>
       
       <exalted>False</exalted>
       <matingType>True</matingType>
@@ -115,7 +115,7 @@
       <id>4</id>
       <name>Twin</name>
       <parents>1 2</parents> 
-      <children>1 2</children>
+      <children></children>
       
       <exalted>False</exalted>
       <matingType>True</matingType>
@@ -150,7 +150,7 @@
       <id>5</id>
       <name>Purplum</name>
       <parents></parents> 
-      <children></children>
+      <children>6</children>
       
       <exalted>False</exalted>
       <matingType>False</matingType>
@@ -186,7 +186,7 @@
       <id>6</id>
       <name>FloofJR</name>
       <parents>3 5</parents> 
-      <children>3 5</children>
+      <children></children>
       
       <exalted>False</exalted>
       <matingType>True</matingType>
