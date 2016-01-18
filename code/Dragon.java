@@ -29,6 +29,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import java.io.File;
 
+import java.util.Arrays;
+import java.lang.StringBuilder;
+
 
 /**
  * Dragon class, contains dragon information and streamlines data access and manipulation<br>
@@ -90,8 +93,8 @@ public class Dragon{
 	 * 
 	 * @return string the parents as space seperated ID.  
 	 */
-	public String getParents(){
-		return us.getElementsByTagName("parents").item(0).getTextContent();	
+	public String[] getParents(){
+		return us.getElementsByTagName("parents").item(0).getTextContent().split(" ");	
 	}
 	
 	/**
@@ -99,8 +102,14 @@ public class Dragon{
 	 * 
 	 * @param parents string the parents as space seperated ID.  
 	 */
-	public void setParents(String parents){
-		us.getElementsByTagName("parents").item(0).setTextContent(parents);
+	public void setParents(String[] parents){
+		StringBuilder strBuilder = new StringBuilder();
+		for (int i = 0; i < parents.length; i++) {
+		   strBuilder.append(parents[i]);
+		   strBuilder.append(" ");
+		}
+		String newString = strBuilder.toString();
+		us.getElementsByTagName("parents").item(0).setTextContent(newString);
 	}
 	
 	
@@ -109,8 +118,8 @@ public class Dragon{
 	 * 
 	 * @return string the children as space seperated ID.  
 	 */
-	public String getChildren(){
-		return us.getElementsByTagName("children").item(0).getTextContent();	
+	public String[] getChildren(){
+		return us.getElementsByTagName("children").item(0).getTextContent().split(" ");	
 	}
 	
 	/**
@@ -118,8 +127,14 @@ public class Dragon{
 	 * 
 	 * @param parents string the children as space seperated ID.  
 	 */
-	public void setChildren(String children){
-		us.getElementsByTagName("children").item(0).setTextContent(children);
+	public void setChildren(String[] children){
+		StringBuilder strBuilder = new StringBuilder();
+		for (int i = 0; i < children.length; i++) {
+		   strBuilder.append(children[i]);
+		   strBuilder.append(" ");
+		}
+		String newString = strBuilder.toString();
+		us.getElementsByTagName("children").item(0).setTextContent(newString);
 	}
 	
 	
@@ -218,6 +233,15 @@ public class Dragon{
 		System.out.println(testSubject.getName());
 		
 		// I'm going to be lazy and assume the rest of the string getters and setters work since I did a lot of copy/pasting so the theory is the same barring tyops
+		
+		// test the exalt getter and setter
+		System.out.println("\nTest getChildren().  Expected result: [3, 4]");
+		System.out.println(Arrays.toString(testSubject.getChildren()));
+		
+		System.out.println("\nTest setChildren().  Expected result: [3, 4, 5]");
+		String[] testArray = {"3","4","5"};
+		testSubject.setChildren(testArray);
+		System.out.println(Arrays.toString(testSubject.getChildren()));
 		
 		// test the exalt getter and setter
 		System.out.println("\nTest getExalted().  Expected result: 'false'");
