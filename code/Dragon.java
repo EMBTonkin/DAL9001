@@ -16,21 +16,32 @@
 // so no ID field.  Just change the ID in the XML.  
 // am I being unclear?  Probably.  Get in touch via the most convenient medium and I will clarify.
 
-// Aslo include comments and print functions for testing a stuff.  Good design, you know.
+// Also include comments and print functions for testing a stuff.  Good design, you know.
 
+
+// added a getter for the XML Node. May be bad design but simplifies interaction with DragonTree's document.
 
 
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
+import org.w3c.dom.DOMConfiguration;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import java.io.File;
 
 import java.util.Arrays;
 import java.lang.StringBuilder;
+
+
+// next few imports just for debug/test printing, can be safely removed for production build -SS2
+import javax.xml.transform.*;
+import javax.xml.transform.dom.*;
+import javax.xml.transform.stream.*;
+import java.io.OutputStreamWriter;
 
 
 /**
@@ -49,6 +60,129 @@ public class Dragon{
 		//System.out.println(us.getElementsByTagName("id").item(0).getTextContent());
 	}
 
+	/**
+		constructor for new completely Dragon--must generate new (empty) XML tree per sample:
+		---
+		<Dragon>
+		  <id>1</id>
+		  <name>Scale</name>
+		  <parents/> 
+		  <children/>
+		  
+		  <exalted>False</exalted>
+		  <matingType>True</matingType>
+		  
+		  <species>Mirror</species> 
+		  <primary>Blue Basic</primary>
+		  <secondary>Blue Basic</secondary>
+		  <tertiary>Blue Underbelly</tertiary>
+		  
+		  <comment>Favorite Dragon</comment>
+		  
+		  <DAL9000> // here is some stuff my program would have.
+			<image>194792.gif</image>
+			<gen>1</gen>
+			
+			<ancestors2/>
+			<ancestors3/>
+			<ancestors4/>
+			<ancestors5/>
+			
+			<descendants2>6</descendants2>
+			<descendants3/>
+			<descendants4/>
+			<descendants5/>
+			
+			<xPos>200</xPos>
+			<yPos>100</yPos>
+		  </DAL9000>
+		</Dragon>
+		---
+		@author StrykeSlammerII
+		
+		Test code is in DragonTree.java; possibly bad design but this class has no self-contained print/save functionality, yet. 
+	*/
+	public Dragon()
+	{
+		// apparently we need a Document to do the work?
+		Document doc;
+		try
+		{
+			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument(); // seems convoluted but here we are.
+		}
+		catch( ParserConfigurationException pce )
+		{
+			System.out.println( pce.getMessage() );
+			doc = null;
+		}
+		
+		DOMConfiguration config = doc.getDomConfig();
+		config.setParameter( "namespaces", false );
+		
+		// create primary Element and children Elements
+		us = doc.createElement("Dragon");
+		us.appendChild(doc.createElement("id"));
+		us.appendChild(doc.createElement("Scale"));
+		us.appendChild(doc.createElement("parents"));
+		us.appendChild(doc.createElement("children"));
+		us.appendChild(doc.createElement("exalted"));
+		us.appendChild(doc.createElement("matingType"));
+		us.appendChild(doc.createElement("species"));
+		us.appendChild(doc.createElement("primary"));
+		us.appendChild(doc.createElement("tertiary"));
+		us.appendChild(doc.createElement("comment"));
+		
+		// and children of DAL9000 tag
+		Element dal = doc.createElement("DAL9000");
+		dal.appendChild(doc.createElement("image"));
+		Element generation = doc.createElement("gen");
+		generation.appendChild( doc.createTextNode( "1" ) ); // defaults to gen1
+		dal.appendChild(generation);
+		dal.appendChild(doc.createElement("ancestors2"));
+		dal.appendChild(doc.createElement("ancestors3"));
+		dal.appendChild(doc.createElement("ancestors4"));
+		dal.appendChild(doc.createElement("ancestors5"));
+		dal.appendChild(doc.createElement("descendants2"));
+		dal.appendChild(doc.createElement("descendants3"));
+		dal.appendChild(doc.createElement("descendants4"));
+		dal.appendChild(doc.createElement("descendants5"));
+		dal.appendChild(doc.createElement("xPos"));
+		dal.appendChild(doc.createElement("yPos"));
+		
+		// System.out.println( generation + ", size: " + generation.getElementsByTagName("*").getLength() );
+		
+		// System.out.println( dal + ", size: " + dal.getElementsByTagName("*").getLength() );
+		
+		us.appendChild( dal );		
+		// System.out.println( us + ", size: " + us.getElementsByTagName("*").getLength() );
+		
+		doc.appendChild( us );
+		
+		// System.out.println( doc + ", size: " + doc.getElementsByTagName("*").getLength() );
+		
+		
+		// apparently printing a Document to System.out is long:
+		try
+		{
+			TransformerFactory tf = TransformerFactory.newInstance();
+			Transformer transformer = tf.newTransformer();
+			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+			transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+		
+			transformer.transform(new DOMSource(doc), new StreamResult(new OutputStreamWriter(System.out, "UTF-8")));
+		}
+		catch( Exception e )
+		{
+			System.out.println( e.getMessage() );
+		}
+		
+
+		
+	}
+	
 	
 	/**
 	 * Get the ID of this dragon
@@ -112,6 +246,14 @@ public class Dragon{
 		us.getElementsByTagName("parents").item(0).setTextContent(newString);
 	}
 	
+	/**
+	 * Get the Node of this dragon
+	 * 
+	 * @return the full XML Node backing store
+	 */
+	public Node getNode(){
+		return us.cloneNode(true);	
+	}
 	
 	/**
 	 * Get the children of this dragon
@@ -254,7 +396,6 @@ public class Dragon{
 		} catch (Exception e) {
 		System.out.println(e.getMessage());
     	}
-		
 		
 	}
 

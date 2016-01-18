@@ -8,7 +8,8 @@
 	// getDragon(int ID): a method to get a dragon by it's ID
 	// getGeneration(int gen): a method to get all dragons in a certain 'generation'
 	// getActiveDragons(): a method to get all dragons that are not 'exalted'
-	// addDragon(Dragon dragon, Dragon mother, Dragon father): adds a dragon to the tree structure, where the parants cane be Null to signify first gen (might re-work this parameter wise.  Feel free to throw out ideas)
+	// addDragon(Dragon newdragon, Dragon mother, Dragon father): adds a dragon to the tree structure, where the parants cane be Null to signify first gen (might re-work this parameter wise.  Feel free to throw out ideas)
+		/// shouldn't the parents (null or not) be handled during creation of the newdragon? I think this is done if you concur :) -SS2
 	// exalt(Dragon dragon): exalt the current dragon.  Could do any number of things depending on object's internal structure, so do this one last.
 	// include any helper functions you might need.
 	
@@ -19,6 +20,7 @@
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
@@ -26,6 +28,7 @@ import org.w3c.dom.Element;
 import java.io.File;
 
 import javax.xml.transform.Transformer;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -42,8 +45,12 @@ public class DragonTree{
 	private String filename; // I'm sure we'll find a use for this.
 	private Document tree; // the raw XML document object
 	private Dragon[] allDragonList; //a simple list of all the dragons in Dragon object form
+		/*** ^^^^ 1) why do we need to cache tree.getElementsByTagName("Dragon") ?
+		          2) and if we do, why not just keep it as a NodeList? 
+		          -SS2
+		*/
 	
-	// constructor for for a family tree with an existing document
+	// constructor for a family tree with an existing document
 	public DragonTree(String newfilename) {
 		try {
 		
@@ -60,7 +67,6 @@ public class DragonTree{
 		allDragonList = new Dragon[nList.getLength()];
 		for (int i = 0; i < nList.getLength(); i++) {
 			allDragonList[i]= new Dragon(nList.item(i));
-			
 		}
 		
 		// being lazy with the exceptions
@@ -69,12 +75,77 @@ public class DragonTree{
     	}
 	}
 	
+	/**
+		Constructor for new/blank DragonTree.
+		@author StrykeSlammerII
+	*/
+	public DragonTree()
+	{
+		filename = "";
+		
+		try
+		{
+			tree = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument(); // seems convoluted but here we are.
+		}
+		catch( ParserConfigurationException pce )
+		{
+			System.out.println( pce.getMessage() );
+			tree = null;
+		}
+		
+		
+		/*
+			create header XML per specification:
+			---
+			<drg>
+				<Family>
+					<title>Master Demo Group</title>
+				</Family>
+			</drg>
+			---
+		*/
+		
+		Element baseNode = tree.createElement( "drg" );
+		tree.appendChild( baseNode );
+		
+		Element newNode = tree.createElement( "Family" );
+		baseNode.appendChild( newNode );
+		baseNode = newNode;
+		
+		newNode = tree.createElement( "title" );
+		baseNode.appendChild( newNode );
+		newNode.appendChild( tree.createTextNode( "Master Demo Group" ) );
+		
+		allDragonList = new Dragon[0];
+	}
 	
+	/**
+		Add a new Dragon to the lair!
+		@author StrykeSlammerII
+		@param newDragon the dragon to be added to the lair
+		@param motherID Can be null if father is also null
+		@param fatherID Can be null if mother is also null
+	*/
+	public void addDragon( Dragon newDragon )
+	{
+		// add newDragon's Node into the "Family" Element
+		Node newNode = newDragon.getNode();
+		tree.adoptNode( newNode );
+		tree.getElementsByTagName("Family").item(0).appendChild( newNode );
+		
+		NodeList nList = tree.getElementsByTagName("Dragon");
+		// soon to be list of our dragon objects
+		allDragonList = new Dragon[nList.getLength()];
+		for (int i = 0; i < nList.getLength(); i++) {
+			allDragonList[i]= new Dragon(nList.item(i));
+		}
+	}
 	
 	/**
 	 * Save the DragonTree in it's current state to a file.  Will be in DRG format
 	 * 
 	 * @param filename String the name of the file you want to save to.  Don't forget the .drg extension!
+	     query: filename field should be set, or can be checked against '' (if new/default DragonTree) so is this param extraneous? -SS2  
 	 */ 
 	public void save(String filename){
 		try {
@@ -82,10 +153,17 @@ public class DragonTree{
 		// to be honest I have no idea what is happening here.  Copied from http://www.mkyong.com/java/how-to-create-xml-file-in-java-dom/
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
+		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+		transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+		
 		DOMSource source = new DOMSource(tree);
 		StreamResult result = new StreamResult(new File(filename));
 
 		transformer.transform(source, result);
+	
 		
 		// being lazy with the exceptions
 		} catch (Exception e) {
@@ -99,11 +177,21 @@ public class DragonTree{
 	 * 
 	 * @param args This parameter is unused.
 	 */
-	public static void main(String[] args) {
-		DragonTree derg = new DragonTree("../demo.drg");
-		derg.save("TEST.drg");
+	public static void main(String[] args) 
+	{
+		DragonTree lair = new DragonTree();
+		// add a 'blank' dragon template
+		lair.addDragon( new Dragon() );
+		// write to test file 
+		lair.save( "empty.drg" );
+		System.out.println( "filename: '" + lair.filename + "'" );
 		
-		System.out.println(derg.filename);
+		// read demo Lair
+		lair = new DragonTree("../demo.drg");
+		// write out to verify identical
+		lair.save("TEST.drg");
+		// also verify filename has changed
+		System.out.println(lair.filename);
 	}
 
 }
