@@ -195,6 +195,142 @@ public class Dragon{
 	}
 	
 	
+	/**
+	 * Get the Species of this dragon
+	 * 
+	 * @return string the species.  
+	 */
+	public String getSpecies(){
+		return us.getElementsByTagName("species").item(0).getTextContent();	
+	}
+	
+	/**
+	 * Set the Species of this dragon
+	 * 
+	 * @param newSpecies string the Species.  
+	 */
+	public void setSpecies(String newSpecies){
+		us.getElementsByTagName("species").item(0).setTextContent(newSpecies);
+	}
+	
+	
+	
+	/**
+	 *######################################################
+	 * Holding off on the gene and color stuff for now.
+	 *######################################################  
+	 */
+	
+	
+	
+	/**
+	 * Get the comment of this dragon
+	 * 
+	 * @return string the comment.  
+	 */
+	public String getComment(){
+		return us.getElementsByTagName("comment").item(0).getTextContent();	
+	}
+	
+	/**
+	 * Set the comment of this dragon
+	 * 
+	 * @param comment string the comment.  
+	 */
+	public void setComment(String comment){
+		us.getElementsByTagName("comment").item(0).setTextContent(comment);
+	}
+	
+	
+	/**
+	 * Get the image location of this dragon
+	 * 
+	 * @return string the the image file name.  
+	 */
+	public String getImage(){
+		Element eElement = (Element) us.getElementsByTagName("DAL9000").item(0);
+		return eElement.getElementsByTagName("image").item(0).getTextContent();
+	}
+	
+	/**
+	 * Set the image location of this dragon
+	 * 
+	 * @param imageName string the image file name.  
+	 */
+	public void setImage(String imageName){
+		Element eElement = (Element) us.getElementsByTagName("DAL9000").item(0);
+		eElement.getElementsByTagName("image").item(0).setTextContent(imageName);
+	}
+	
+	
+	/**
+	 * Get the 'generation' of this dragon
+	 * 
+	 * @return int the generation designation.  
+	 */
+	public int getGen(){
+		Element eElement = (Element) us.getElementsByTagName("DAL9000").item(0);
+		return Integer.parseInt( eElement.getElementsByTagName("gen").item(0).getTextContent() );
+	}
+	
+	/**
+	 * Set the 'generation' of this dragon
+	 * 
+	 * @param imageName int the generation designation.  
+	 */
+	public void setGen(int gen){
+		Element eElement = (Element) us.getElementsByTagName("DAL9000").item(0);
+		eElement.getElementsByTagName("gen").item(0).setTextContent( Integer.toString(gen));
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Get the x position of this dragon
+	 * 
+	 * @return int the x position.  
+	 */
+	public int getX(){
+		Element eElement = (Element) us.getElementsByTagName("DAL9000").item(0);
+		return Integer.parseInt( eElement.getElementsByTagName("xPos").item(0).getTextContent() );
+	}
+	
+	/**
+	 * Set the x position of this dragon
+	 * 
+	 * @param imageName int x position.  
+	 */
+	public void setX(int x){
+		Element eElement = (Element) us.getElementsByTagName("DAL9000").item(0);
+		eElement.getElementsByTagName("xPos").item(0).setTextContent( Integer.toString(x));
+	}
+	
+	
+	/**
+	 * Get the y position of this dragon
+	 * 
+	 * @return int the y position.  
+	 */
+	public int getY(){
+		Element eElement = (Element) us.getElementsByTagName("DAL9000").item(0);
+		return Integer.parseInt( eElement.getElementsByTagName("yPos").item(0).getTextContent() );
+	}
+	
+	/**
+	 * Set the y position of this dragon
+	 * 
+	 * @param imageName int y position.  
+	 */
+	public void setY(int y){
+		Element eElement = (Element) us.getElementsByTagName("DAL9000").item(0);
+		eElement.getElementsByTagName("yPos").item(0).setTextContent( Integer.toString(y));
+	}
 	
 	
 	
@@ -250,6 +386,23 @@ public class Dragon{
 		System.out.println("\nTest setExalted().  Expected result: 'true'");
 		testSubject.setExalted(true);
 		System.out.println(testSubject.getExalted());
+		
+		// test the image name getter and setter
+		System.out.println("\nTest getImage().  Expected result: '194792.gif'");
+		System.out.println(testSubject.getImage());
+		
+		System.out.println("\nTest setImage().  Expected result: 'splorge.jpg'");
+		testSubject.setImage("splorge.jpg");
+		System.out.println(testSubject.getImage());
+		
+		
+		// test the image name getter and setter
+		System.out.println("\nTest getGen().  Expected result: '1'");
+		System.out.println(testSubject.getGen());
+		
+		System.out.println("\nTest setGen().  Expected result: '5'");
+		testSubject.setGen(5);
+		System.out.println(testSubject.getGen());
 		
 		} catch (Exception e) {
 		System.out.println(e.getMessage());
