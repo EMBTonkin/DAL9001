@@ -8,15 +8,27 @@
       <id>1</id>
       <name>Scale</name>
       <parents></parents> 
-      <children>3 4</children>
+      <children>
+      	<int>3</int>
+        <int>4</int>
+      </children>
       
       <exalted>False</exalted>
       <matingType>True</matingType>
       
       <species>Mirror</species> 
-      <primary>Blue Basic</primary>
-      <secondary>Blue Basic</secondary>
-      <tertiary>Blue Underbelly</tertiary>
+      <primary>
+        <color>Blue</color>
+        <gene>Basic</gene>
+      </primary>
+      <secondary>
+        <color>White</color>
+        <gene>Basic</gene>
+      </secondary>
+      <tertiary>
+        <color>Red</color>
+        <gene>Underbelly</gene>
+      </tertiary>
       
       <comment>Favorite Dragon
 </comment>
@@ -30,7 +42,9 @@
         <ancestors4></ancestors4>
         <ancestors5></ancestors5>
         
-        <descendants2>6</descendants2>
+        <descendants2>
+          <int>6</int>
+        </descendants2>
         <descendants3></descendants3>
         <descendants4></descendants4>
         <descendants5></descendants5>
@@ -44,7 +58,10 @@
       <id>2</id>
       <name>Floof</name>
       <parents></parents> 
-      <children>3 4</children>
+      <children>
+      	<int>3</int>
+        <int>4</int>
+      </children>
       
       <exalted>False</exalted>
       <matingType>False</matingType>
@@ -66,7 +83,9 @@
         <ancestors4></ancestors4>
         <ancestors5></ancestors5>
         
-        <descendants2>6</descendants2>
+        <descendants2>
+          <int>6</int>
+        </descendants2>
         <descendants3></descendants3>
         <descendants4></descendants4>
         <descendants5></descendants5>
@@ -79,8 +98,13 @@
     <Dragon>
       <id>3</id>
       <name>Oi</name>
-      <parents>1 2</parents> 
-      <children>6</children>
+      <parents>
+      	<int>1</int>
+      	<int>2</int>
+      </parents> 
+      <children>
+      	<int>6</int>
+      </children>
       
       <exalted>False</exalted>
       <matingType>True</matingType>
@@ -114,7 +138,10 @@
     <Dragon>
       <id>4</id>
       <name>Twin</name>
-      <parents>1 2</parents> 
+      <parents>
+      	<int>1</int>
+      	<int>2</int>
+      </parents> 
       <children></children>
       
       <exalted>False</exalted>
@@ -150,7 +177,9 @@
       <id>5</id>
       <name>Purplum</name>
       <parents></parents> 
-      <children>6</children>
+      <children>
+      	<int>6</int>
+      </children>
       
       <exalted>False</exalted>
       <matingType>False</matingType>
@@ -185,7 +214,10 @@
     <Dragon>
       <id>6</id>
       <name>FloofJR</name>
-      <parents>3 5</parents> 
+      <parents>
+      	<int>3</int>
+      	<int>5</int>
+      </parents> 
       <children></children>
       
       <exalted>False</exalted>
@@ -204,7 +236,10 @@
         <image>194792.gif</image>
         <gen>3</gen>
         
-        <ancestors2>1 2</ancestors2>
+        <ancestors2>
+          <int>1</int>
+          <int>2</int>
+        </ancestors2>
         <ancestors3></ancestors3>
         <ancestors4></ancestors4>
         <ancestors5></ancestors5>
