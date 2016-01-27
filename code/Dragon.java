@@ -34,7 +34,6 @@ import org.w3c.dom.NodeList;
 import java.io.File;
 
 import java.util.Arrays;
-import java.lang.StringBuilder;
 
 
 // next few imports just for debug/test printing, can be safely removed for production build -SS2
@@ -185,6 +184,16 @@ public class Dragon{
 	
 	
 	/**
+	 * Get the Node of this dragon
+	 * 
+	 * @return the full XML Node backing store
+	 */
+	public Node getNode(){
+		return us.cloneNode(true);	
+	}
+	
+	
+	/**
 	 * Get the ID of this dragon
 	 * 
 	 * @return string the ID number.  
@@ -225,58 +234,70 @@ public class Dragon{
 	/**
 	 * Get the parents of this dragon
 	 * 
-	 * @return string the parents as space seperated ID.  
+	 * @return string[] a list of the parent ID strings.  
 	 */
 	public String[] getParents(){
-		return us.getElementsByTagName("parents").item(0).getTextContent().split(" ");	
+		Element eElement= (Element) us.getElementsByTagName("parents").item(0);
+		NodeList list = eElement.getElementsByTagName("int");
+		String[] parents = new String[list.getLength()];
+		for (int i = 0; i < list.getLength(); i++) {
+			parents[i] = list.item(i).getTextContent();
+		}
+		return parents;
 	}
 	
 	/**
 	 * Set the parents of this dragon
 	 * 
-	 * @param parents string the parents as space seperated ID.  
+	 * @param parents string[] a list of the parent ID strings.  
 	 */
 	public void setParents(String[] parents){
-		StringBuilder strBuilder = new StringBuilder();
-		for (int i = 0; i < parents.length; i++) {
-		   strBuilder.append(parents[i]);
-		   strBuilder.append(" ");
+		Element eElement= (Element) us.getElementsByTagName("parents").item(0);
+		NodeList list = eElement.getElementsByTagName("int");
+		int startLength = list.getLength();
+		for (int i = 0; i < startLength; i++) {
+			eElement.removeChild(list.item(0));//always remove the first item because as you remove them they shuffle up.  You know what I mean
 		}
-		String newString = strBuilder.toString();
-		us.getElementsByTagName("parents").item(0).setTextContent(newString);
+		for (int i = 0; i < parents.length; i++) {
+			Element child = eElement.getOwnerDocument().createElement("int");
+			child.appendChild(eElement.getOwnerDocument().createTextNode(parents[i]));
+			eElement.appendChild(child);
+		}
 	}
 	
-	/**
-	 * Get the Node of this dragon
-	 * 
-	 * @return the full XML Node backing store
-	 */
-	public Node getNode(){
-		return us.cloneNode(true);	
-	}
 	
 	/**
 	 * Get the children of this dragon
 	 * 
-	 * @return string the children as space seperated ID.  
+	 * @return string[] the children as a list of String IDs.  
 	 */
 	public String[] getChildren(){
-		return us.getElementsByTagName("children").item(0).getTextContent().split(" ");	
+		Element eElement= (Element) us.getElementsByTagName("children").item(0);
+		NodeList list = eElement.getElementsByTagName("int");
+		String[] children = new String[list.getLength()];
+		for (int i = 0; i < list.getLength(); i++) {
+			children[i] = list.item(i).getTextContent();
+		}
+		return children;
 	}
 	
 	/**
 	 * Set the children of this dragon
 	 * 
-	 * @param parents string the children as space seperated ID.  
+	 * @param children string[] the children as a list of String IDs.  
 	 */
 	public void setChildren(String[] children){
-		StringBuilder strBuilder = new StringBuilder();
-		for (int i = 0; i < children.length; i++) {
-		   strBuilder.append(children[i]);
-		   strBuilder.append(" ");
+		Element eElement= (Element) us.getElementsByTagName("children").item(0);
+		NodeList list = eElement.getElementsByTagName("int");
+		int startLength = list.getLength();
+		for (int i = 0; i < startLength; i++) {
+			eElement.removeChild(list.item(0));//always remove the first item because as you remove them they shuffle up.  You know what I mean
 		}
-		String newString = strBuilder.toString();
-		us.getElementsByTagName("children").item(0).setTextContent(newString);
+		for (int i = 0; i < children.length; i++) {
+			Element child = eElement.getOwnerDocument().createElement("int");
+			child.appendChild(eElement.getOwnerDocument().createTextNode(children[i]));
+			eElement.appendChild(child);
+		}
 	}
 	
 	
@@ -290,7 +311,7 @@ public class Dragon{
 	}
 	
 	/**
-	 * Set the children of this dragon
+	 * Set the hatch day of this dragon
 	 * 
 	 * @param date string the hatch day formated DD-MM-YYYY.  
 	 */
@@ -356,13 +377,82 @@ public class Dragon{
 	}
 	
 	
+	/**
+	 * get a Color of this dragon
+	 * 
+	 * @param level int is a number representing Primary, Secondary, or Tertiary
+	 * @return string the color name at this level
+	 */
+	public String getColor(int level){
+		// default to level 1 (primary)
+		Element eElement = (Element) us.getElementsByTagName("primary").item(0);
+		// if it's not really primary fix it
+		if (level == 2){
+			eElement = (Element) us.getElementsByTagName("secondary").item(0);
+		}
+		if (level == 3){
+			eElement = (Element) us.getElementsByTagName("tertiary").item(0);
+		}
+		return eElement.getElementsByTagName("color").item(0).getTextContent();
+	}
 	
 	/**
-	 *######################################################
-	 * Holding off on the gene and color stuff for now.
-	 *######################################################  
+	 * Set a Color of this dragon
+	 * 
+	 * @param level int is a number representing Primary, Secondary, or Tertiary
+	 * @param color string the name (capitalized).  
 	 */
+	public void setColor(int level, String color){
+		// default to level 1 (primary)
+		Element eElement = (Element) us.getElementsByTagName("primary").item(0);
+		// if it's not really primary fix it
+		if (level == 2){
+			eElement = (Element) us.getElementsByTagName("secondary").item(0);
+		}
+		if (level == 3){
+			eElement = (Element) us.getElementsByTagName("tertiary").item(0);
+		}
+		eElement.getElementsByTagName("color").item(0).setTextContent(color);
+	}
 	
+	
+	/**
+	 * get a gene of this dragon
+	 * 
+	 * @param level int is a number representing Primary, Secondary, or Tertiary
+	 * @return string the gene name at this level
+	 */
+	public String getGene(int level){
+		// default to level 1 (primary)
+		Element eElement = (Element) us.getElementsByTagName("primary").item(0);
+		// if it's not really primary fix it
+		if (level == 2){
+			eElement = (Element) us.getElementsByTagName("secondary").item(0);
+		}
+		if (level == 3){
+			eElement = (Element) us.getElementsByTagName("tertiary").item(0);
+		}
+		return eElement.getElementsByTagName("gene").item(0).getTextContent();
+	}
+	
+	/**
+	 * Set the Color of this dragon
+	 * 
+	 * @param level int is a number representing Primary, Secondary, or Tertiary
+	 * @param color string the name (capitalized).  
+	 */
+	public void setGene(int level, String gene){
+		// default to level 1 (primary)
+		Element eElement = (Element) us.getElementsByTagName("primary").item(0);
+		// if it's not really primary fix it
+		if (level == 2){
+			eElement = (Element) us.getElementsByTagName("secondary").item(0);
+		}
+		if (level == 3){
+			eElement = (Element) us.getElementsByTagName("tertiary").item(0);
+		}
+		eElement.getElementsByTagName("gene").item(0).setTextContent(gene);
+	}
 	
 	
 	/**
@@ -426,11 +516,136 @@ public class Dragon{
 	}
 	
 	
+	/**
+	 * Get the ancestors of this dragon
+	 * 
+	 * @param level int generations from current dragon
+	 * @return string[] the ancestors as a list of String IDs.  
+	 */
+	public String[] getAncestors(int level){
+		Element DAL9000 = (Element) us.getElementsByTagName("DAL9000").item(0);
+		//start with default, which is level 2
+		Element eElement = (Element) DAL9000.getElementsByTagName("ancestors2").item(0);
+		if (level == 1){
+			return this.getParents();
+		}
+		if (level == 3){
+			eElement = (Element) DAL9000.getElementsByTagName("ancestors3").item(0);
+		}
+		if (level == 4){
+			eElement = (Element) DAL9000.getElementsByTagName("ancestors4").item(0);
+		}
+		if (level == 5){
+			eElement = (Element) DAL9000.getElementsByTagName("ancestors5").item(0);
+		}
+		NodeList list = eElement.getElementsByTagName("int");
+		String[] ansestors = new String[list.getLength()];
+		for (int i = 0; i < list.getLength(); i++) {
+			ansestors[i] = list.item(i).getTextContent();
+		}
+		return ansestors;
+	}
+	
+	/**
+	 * Set the ancestors of this dragon
+	 * 
+	 * @param level int generations from current dragon
+	 * @param parents string[] the ancestors as a list of String IDs.  
+	 */
+	public void setAncestors(int level, String[] ancestors){
+		Element DAL9000 = (Element) us.getElementsByTagName("DAL9000").item(0);
+		//start with default, which is level 2
+		Element eElement = (Element) DAL9000.getElementsByTagName("ancestors2").item(0);
+		if (level == 1){
+			this.setParents(ancestors);
+			return;
+		}
+		if (level == 3){
+			eElement = (Element) DAL9000.getElementsByTagName("ancestors3").item(0);
+		}
+		if (level == 4){
+			eElement = (Element) DAL9000.getElementsByTagName("ancestors4").item(0);
+		}
+		if (level == 5){
+			eElement = (Element) DAL9000.getElementsByTagName("ancestors5").item(0);
+		}
+		NodeList list = eElement.getElementsByTagName("int");
+		int startLength = list.getLength();
+		for (int i = 0; i < startLength; i++) {
+			eElement.removeChild(list.item(0));//always remove the first item because as you remove them they shuffle up.  You know what I mean
+		}
+		for (int i = 0; i < ancestors.length; i++) {
+			Element child = eElement.getOwnerDocument().createElement("int");
+			child.appendChild(eElement.getOwnerDocument().createTextNode(ancestors[i]));
+			eElement.appendChild(child);
+		}
+	}
 	
 	
+	/**
+	 * Get the descendants of this dragon
+	 * 
+	 * @param level int generations from current dragon
+	 * @return string[] the descendants as a list of String IDs.  
+	 */
+	public String[] getDescendants(int level){
+		Element DAL9000 = (Element) us.getElementsByTagName("DAL9000").item(0);
+		//start with default, which is level 2
+		Element eElement = (Element) DAL9000.getElementsByTagName("descendants2").item(0);
+		if (level == 1){
+			return this.getChildren();
+		}
+		if (level == 3){
+			eElement = (Element) DAL9000.getElementsByTagName("descendants3").item(0);
+		}
+		if (level == 4){
+			eElement = (Element) DAL9000.getElementsByTagName("descendants4").item(0);
+		}
+		if (level == 5){
+			eElement = (Element) DAL9000.getElementsByTagName("descendants5").item(0);
+		}
+		NodeList list = eElement.getElementsByTagName("int");
+		String[] descendants = new String[list.getLength()];
+		for (int i = 0; i < list.getLength(); i++) {
+			descendants[i] = list.item(i).getTextContent();
+		}
+		return descendants;
+	}
 	
-	
-	
+	/**
+	 * Set the descendants of this dragon
+	 * 
+	 * @param level int generations from current dragon
+	 * @param parents string[] the descendants as a list of String IDs.  
+	 */
+	public void setDescendants(int level, String[] descendants){
+		Element DAL9000 = (Element) us.getElementsByTagName("DAL9000").item(0);
+		//start with default, which is level 2
+		Element eElement = (Element) DAL9000.getElementsByTagName("descendants2").item(0);
+		if (level == 1){
+			this.setChildren(descendants);
+			return;
+		}
+		if (level == 3){
+			eElement = (Element) DAL9000.getElementsByTagName("descendants3").item(0);
+		}
+		if (level == 4){
+			eElement = (Element) DAL9000.getElementsByTagName("descendants4").item(0);
+		}
+		if (level == 5){
+			eElement = (Element) DAL9000.getElementsByTagName("descendants5").item(0);
+		}
+		NodeList list = eElement.getElementsByTagName("int");
+		int startLength = list.getLength();
+		for (int i = 0; i < startLength; i++) {
+			eElement.removeChild(list.item(0));//always remove the first item because as you remove them they shuffle up.  You know what I mean
+		}
+		for (int i = 0; i < descendants.length; i++) {
+			Element child = eElement.getOwnerDocument().createElement("int");
+			child.appendChild(eElement.getOwnerDocument().createTextNode(descendants[i]));
+			eElement.appendChild(child);
+		}
+	}
 	
 	
 	/**
@@ -538,13 +753,70 @@ public class Dragon{
 		System.out.println(testSubject.getImage());
 		
 		
-		// test the image name getter and setter
+		// test the image generation getter and setter
 		System.out.println("\nTest getGen().  Expected result: '1'");
 		System.out.println(testSubject.getGen());
 		
 		System.out.println("\nTest setGen().  Expected result: '5'");
 		testSubject.setGen(5);
 		System.out.println(testSubject.getGen());
+		
+		
+		// test the color getter and setter for each level
+		System.out.println("\nTest getColor() on primary.  Expected result: 'Blue'");
+		System.out.println(testSubject.getColor(1));
+		
+		System.out.println("\nTest getColor() on secondary.  Expected result: 'While'");
+		System.out.println(testSubject.getColor(2));
+		
+		System.out.println("\nTest getColor() on tertiarty.  Expected result: 'Red'");
+		System.out.println(testSubject.getColor(3));
+		
+		System.out.println("\nTest getColor() on non 1 2 3 number.  Expected result: 'Blue'");
+		System.out.println(testSubject.getColor(5));
+		
+		System.out.println("\nTest setColor()on primary.  Expected result: 'Purple'");
+		testSubject.setColor(1,"Purple");
+		System.out.println(testSubject.getColor(1));
+		
+		System.out.println("\nTest setColor()on secondary.  Expected result: 'Maroon'");
+		testSubject.setColor(2,"Maroon");
+		System.out.println(testSubject.getColor(2));
+		
+		System.out.println("\nTest setColor()on secondary.  Expected result: 'Yellow'");
+		testSubject.setColor(3,"Yellow");
+		System.out.println(testSubject.getColor(3));
+		
+		
+		// test the ancestor getter and setter for each level
+		System.out.println("\nTest setAncestors() and getAncestors() on all five levels.  Expected result: sequential numbers starting at 3, with lists also increasing, but the last one is empty because.");
+		String[] list = {"3"};
+		testSubject.setAncestors(1,list);
+		String[] list2 = {"4","5"};
+		testSubject.setAncestors(2,list2);
+		String[] list3 = {"6","7","8"};
+		testSubject.setAncestors(3,list3);
+		String[] list4 = {"9","10","11","12"};
+		testSubject.setAncestors(4,list4);
+		System.out.println(Arrays.toString(testSubject.getAncestors(1)));
+		System.out.println(Arrays.toString(testSubject.getAncestors(2)));
+		System.out.println(Arrays.toString(testSubject.getAncestors(3)));
+		System.out.println(Arrays.toString(testSubject.getAncestors(4)));
+		System.out.println(Arrays.toString(testSubject.getAncestors(5)));
+		
+		
+		// test some edge cases with the third level of descendants because why not?
+		System.out.println("\nTest setDescendants() and setDescendants() on the third level, checking some edge cases.  Expected result: [] then [9, 10, 11, 12] then [] then [1, 2, 3]");
+		System.out.println(Arrays.toString(testSubject.getDescendants(3)));
+		String[] listy = {"9","10","11","12"};
+		testSubject.setDescendants(3,listy);
+		System.out.println(Arrays.toString(testSubject.getDescendants(3)));
+		String[] listy2 = {};
+		testSubject.setDescendants(3,listy2);
+		System.out.println(Arrays.toString(testSubject.getDescendants(3)));
+		String[] listy3 = {"1","2","3"};
+		testSubject.setDescendants(3,listy3);
+		System.out.println(Arrays.toString(testSubject.getDescendants(3)));
 		
 		} catch (Exception e) {
 		System.out.println(e.getMessage());
