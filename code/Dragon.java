@@ -122,7 +122,7 @@ public class Dragon{
 		// create primary Element and children Elements
 		us = doc.createElement("Dragon");
 		us.appendChild(doc.createElement("id"));
-		us.appendChild(doc.createElement("Scale"));
+		us.appendChild(doc.createElement("name"));
 		us.appendChild(doc.createElement("parents"));
 		us.appendChild(doc.createElement("children"));
 		us.appendChild(doc.createElement("exalted"));

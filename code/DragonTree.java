@@ -13,7 +13,7 @@
 	// exalt(Dragon dragon): exalt the current dragon.  Could do any number of things depending on object's internal structure, so do this one last.
 	// include any helper functions you might need.
 	
-// Aslo include comments and print functions for testing a stuff.  Good design, you know.
+// Also include comments and print functions for testing a stuff.  Good design, you know.
 
 
 
@@ -61,7 +61,7 @@ public class DragonTree{
 		DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		tree = dBuilder.parse(file);
 		
-		// list of all the Dragon notes to loop through
+		// list of all the Dragon nodes to loop through
 		NodeList nList = tree.getElementsByTagName("Dragon");
 		// soon to be list of our dragon objects
 		allDragonList = new Dragon[nList.getLength()];
@@ -123,22 +123,47 @@ public class DragonTree{
 		Add a new Dragon to the lair!
 		@author StrykeSlammerII
 		@param newDragon the dragon to be added to the lair
-		@param motherID Can be null if father is also null
-		@param fatherID Can be null if mother is also null
 	*/
 	public void addDragon( Dragon newDragon )
-	{
+	{	
 		// add newDragon's Node into the "Family" Element
 		Node newNode = newDragon.getNode();
 		tree.adoptNode( newNode );
-		tree.getElementsByTagName("Family").item(0).appendChild( newNode );
+		tree.getElementsByTagName("Family").item(0).appendChild( newNode ); // only a single Family tag thus far in the XML spec
 		
-		NodeList nList = tree.getElementsByTagName("Dragon");
 		// soon to be list of our dragon objects
-		allDragonList = new Dragon[nList.getLength()];
-		for (int i = 0; i < nList.getLength(); i++) {
-			allDragonList[i]= new Dragon(nList.item(i));
+		Dragon[] newDragonList = new Dragon[allDragonList.length + 1];
+		int i = 0;  // need this index to stick around after the loop
+		for (; i < allDragonList.length; i++) 
+		{
+			newDragonList[i]= allDragonList[i];
 		}
+		newDragonList[i] = newDragon;
+		
+		allDragonList = newDragonList;
+		
+		// System.out.println( "DragonTree.addDragon() : allDragonList.getLength() = " + allDragonList.length );  
+		
+	}
+	
+	/**
+		@author StrykeSlammerII
+		@return Dragon with the requested ID #, or 'null' if ID not found.
+		@param ID The dragon ID# to search for (as a string) 
+	*/
+	public Dragon getDragonByID( String ID )
+	{
+		System.out.println( allDragonList.length + " dragons to search through." );
+		
+		for( Dragon d : allDragonList )
+		{
+			System.out.println( "getDragonByID: param = '" + ID + "' ?= '" + d.getID() + "'" );
+			
+			if( d.getID() == ID )
+				return d; // only one dragon can have a given ID, so no need to keep looking.
+		}
+		
+		return null;
 	}
 	
 	/**
@@ -181,7 +206,19 @@ public class DragonTree{
 	{
 		DragonTree lair = new DragonTree();
 		// add a 'blank' dragon template
-		lair.addDragon( new Dragon() );
+		Dragon derg = new Dragon();
+		lair.addDragon( derg );
+				
+		// give the previously-added dragon an ID
+		derg.setID( "15" );
+		System.out.println( "derg ID set to " + derg.getID() );
+		// search for different ID, should get "null"
+		derg = lair.getDragonByID( "1" );
+		System.out.println( "'" + derg + "' should be 'null'" );
+		// search for same ID, should get the above Dragon
+		derg = lair.getDragonByID( "15" );
+		System.out.println( "'" + derg + "' should have ID 15" );
+		
 		// write to test file 
 		lair.save( "empty.drg" );
 		System.out.println( "filename: '" + lair.filename + "'" );
