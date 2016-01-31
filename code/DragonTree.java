@@ -4,16 +4,20 @@
 //Needs these methods:
 	// a init method that reads in dragons from a file and places them in dragon objects
 	// another version where it starts with no file and creates an empty XML object
+		/// done?  -SS2
 	// √ (done) save(str fileName): take the current dragon objects and save them in a .drg file
 	// getDragon(int ID): a method to get a dragon by it's ID
+		/// done for String ID rather than int ID, plz check -SS2
 	// getGeneration(int gen): a method to get all dragons in a certain 'generation'
+		/// done? -SS2
 	// getActiveDragons(): a method to get all dragons that are not 'exalted'
-	// addDragon(Dragon newdragon, Dragon mother, Dragon father): adds a dragon to the tree structure, where the parants cane be Null to signify first gen (might re-work this parameter wise.  Feel free to throw out ideas)
+		/// tweaked to getDragonsByExalted( bool ) so we can get all exalted dragons too, just in case. -SS2
+	// addDragon(Dragon newdragon, Dragon mother, Dragon father): adds a dragon to the tree structure, where the parants can be Null to signify first gen (might re-work this parameter wise.  Feel free to throw out ideas)
 		/// shouldn't the parents (null or not) be handled during creation of the newdragon? I think this is done if you concur :) -SS2
 	// exalt(Dragon dragon): exalt the current dragon.  Could do any number of things depending on object's internal structure, so do this one last.
 	// include any helper functions you might need.
 	
-// Also include comments and print functions for testing a stuff.  Good design, you know.
+// Also include comments and print functions for testing and stuff.  Good design, you know.
 
 
 
@@ -33,6 +37,9 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * DragonTree class, contains dragons and organizes them.  This is the Model of our Model View Controller.  I think.<br>
@@ -167,6 +174,48 @@ public class DragonTree{
 	}
 	
 	/**
+		@author StrykeSlammerII
+		@param gen match all dragons that have this generation
+		@return (Set of type Dragon) all dragons in this DragonTree with the requested generation 
+	*/
+	public Set<Dragon> getGeneration( int gen )
+	{
+		HashSet<Dragon> outList = new HashSet<Dragon>();
+		
+		for( Dragon d : allDragonList )
+		{
+			if( d.getGen() == gen )
+			{
+				outList.add(d);
+			}
+		}
+		
+		return outList;
+		
+	}
+	
+	/**
+		@author StrykeSlammerII
+		@param exalted do we want exalted dragons (true) or active dragons (false) ?
+		@return (Set of type Dragon) all dragons in this DragonTree with the requested exalt status 
+	*/
+	public Set<Dragon> getDragonsByExalted( boolean exalted )
+	{
+		HashSet<Dragon> outList = new HashSet<Dragon>();
+		
+		for( Dragon d : allDragonList )
+		{
+			if( d.getExalted() == exalted )
+			{
+				outList.add(d);
+			}
+		}
+		
+		return outList;
+		
+	}
+	
+	/**
 	 * Save the DragonTree in it's current state to a file.  Will be in DRG format
 	 * 
 	 * @param filename String the name of the file you want to save to.  Don't forget the .drg extension!
@@ -218,6 +267,47 @@ public class DragonTree{
 		// search for same ID, should get the above Dragon
 		derg = lair.getDragonByID( "15" );
 		System.out.println( "'" + derg + "' should have ID 15" );
+		
+		// test search-for-gen
+			// set previous derg's gen
+		derg.setGen( 1 );
+			// add two more dergs at gen2
+		derg = new Dragon();
+		derg.setGen( 2 );
+		derg.setName( "Bob" );
+		lair.addDragon( derg );
+		
+		derg = new Dragon();
+		derg.setGen( 2 );
+		derg.setName( "Vila" );
+		lair.addDragon( derg );
+		
+		Set<Dragon> s = lair.getGeneration( 1 );
+		System.out.println( "Gen1: " );
+		for( Dragon d : s )
+			System.out.println( "ID: " + d.getID() + ", Name: " + d.getName() );
+
+		s = lair.getGeneration( 2 );
+		System.out.println( "Gen2: " );
+		for( Dragon d : s )
+			System.out.println( "ID: " + d.getID() + ", Name: " + d.getName() );
+			
+		s = lair.getGeneration( 3 );
+		System.out.println( "Gen3: " );
+		for( Dragon d : s )
+			System.out.println( "ID: " + d.getID() + ", Name: " + d.getName() );
+			
+		// check for Exalted--FALSE should be all dragons, TRUE should be empty set
+		s = lair.getDragonsByExalted( false );
+		System.out.println( "Active dragons: " );
+		for( Dragon d : s )
+			System.out.println( "ID: " + d.getID() + ", Name: " + d.getName() );
+		
+		s = lair.getDragonsByExalted( true );
+		System.out.println( "Exalted dragons (should be null) " );
+		for( Dragon d : s )
+			System.out.println( "ID: " + d.getID() + ", Name: " + d.getName() );
+		
 		
 		// write to test file 
 		lair.save( "empty.drg" );
