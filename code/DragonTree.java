@@ -9,7 +9,9 @@
 	// getDragon(int ID): a method to get a dragon by it's ID
 		/// done for String ID rather than int ID, plz check -SS2
 	// getGeneration(int gen): a method to get all dragons in a certain 'generation'
+		/// done? -SS2
 	// getActiveDragons(): a method to get all dragons that are not 'exalted'
+		/// tweaked to getDragonsByExalted( bool ) so we can get all exalted dragons too, just in case. -SS2
 	// addDragon(Dragon newdragon, Dragon mother, Dragon father): adds a dragon to the tree structure, where the parants can be Null to signify first gen (might re-work this parameter wise.  Feel free to throw out ideas)
 		/// shouldn't the parents (null or not) be handled during creation of the newdragon? I think this is done if you concur :) -SS2
 	// exalt(Dragon dragon): exalt the current dragon.  Could do any number of things depending on object's internal structure, so do this one last.
@@ -174,7 +176,7 @@ public class DragonTree{
 	/**
 		@author StrykeSlammerII
 		@param gen match all dragons that have this generation
-		@return (List of type Dragon) all dragons in this DragonTree with the requested generation 
+		@return (Set of type Dragon) all dragons in this DragonTree with the requested generation 
 	*/
 	public Set<Dragon> getGeneration( int gen )
 	{
@@ -183,6 +185,27 @@ public class DragonTree{
 		for( Dragon d : allDragonList )
 		{
 			if( d.getGen() == gen )
+			{
+				outList.add(d);
+			}
+		}
+		
+		return outList;
+		
+	}
+	
+	/**
+		@author StrykeSlammerII
+		@param exalted do we want exalted dragons (true) or active dragons (false) ?
+		@return (Set of type Dragon) all dragons in this DragonTree with the requested exalt status 
+	*/
+	public Set<Dragon> getDragonsByExalted( boolean exalted )
+	{
+		HashSet<Dragon> outList = new HashSet<Dragon>();
+		
+		for( Dragon d : allDragonList )
+		{
+			if( d.getExalted() == exalted )
 			{
 				outList.add(d);
 			}
@@ -274,6 +297,18 @@ public class DragonTree{
 		for( Dragon d : s )
 			System.out.println( "ID: " + d.getID() + ", Name: " + d.getName() );
 			
+		// check for Exalted--FALSE should be all dragons, TRUE should be empty set
+		s = lair.getDragonsByExalted( false );
+		System.out.println( "Active dragons: " );
+		for( Dragon d : s )
+			System.out.println( "ID: " + d.getID() + ", Name: " + d.getName() );
+		
+		s = lair.getDragonsByExalted( true );
+		System.out.println( "Exalted dragons (should be null) " );
+		for( Dragon d : s )
+			System.out.println( "ID: " + d.getID() + ", Name: " + d.getName() );
+		
+		
 		// write to test file 
 		lair.save( "empty.drg" );
 		System.out.println( "filename: '" + lair.filename + "'" );
