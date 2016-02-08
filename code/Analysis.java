@@ -55,12 +55,12 @@ public class Analysis{
 		String[] names = {"Fae","Guardian","Mirror","Pearlcatcher","Ridgeback","Tundra","Spiral","Imperial","Snapper","Wildclaw","Nocturne","Coatl","Skydancer", 
 				"Basic","Iridescent","Tiger","Clown","Speckle","Ripple","Bar","Crystal","Vipera","Piebald","Cherub", "Poison",
 				"Shimmer","Stripes","Eye-Spots","Freckle","Seraph","Current","Daub","Facet","Hypnotic","Paint","Peregrine", "Toxin","Butterfly",
-				"Circuit","Gembond","Underbelly","Crackle","Smoke","Spines","Okapi","Glimmer","Thylacine"};
+				"Circuit","Gembond","Underbelly","Crackle","Smoke","Spines","Okapi","Glimmer","Thylacine","Stained"};
 		// the relative rarities of the previous stuff, in the same order.  
 		int[] values ={0,0,0,1,1,0,1,3,1,4,3,4,2, 
 				 0,4,1,1,1,2,2,4,2,1,2,3,
 				 4,1,1,1,2,1,1,4,1,1,1,3,4,
-				 4,3,1,2,2,3,2,4,1};
+				 4,3,1,2,2,3,2,4,1,4};
 		// add these key value pairs to the hashmap.  Simple!
 		geneRarities = new HashMap<String,Integer>();
 		for (int i = 0; i < names.length; i ++){
