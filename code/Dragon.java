@@ -1,7 +1,7 @@
 // Dragon class that holds one dragon instance.
 
 // Note that if a function exists it might just be a dummy function for other things
-// Similarly, if you finish a function, not is as done in these notes
+// Similarly, if you finish a function, note is as done in these notes
 
 // Needs two fields, 
 	//one pointing to this dragon in the XML tree
