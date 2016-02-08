@@ -15,12 +15,19 @@
 
  
 import java.util.HashMap;
+import java.util.TreeMap;
+import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.io.FileReader;
+import java.io.FileNotFoundException;
+import java.io.BufferedReader;
+import java.io.IOException;
  
 /**
  * Analysis class, contains various functions for analyzing dragons<br>
  * DAL9001
  * @author Lizzie Tonkin
- * @author ADD YOUR NAME OR FAKE NAME HERE
+ * @author StrykeSlammerII
  */ 
 public class Analysis{
 
@@ -32,11 +39,16 @@ public class Analysis{
 						{"3/97","10/90","15/85","50/50","97/3"},
 						{"1/99","1/99","2/98","3/97","50/50"}}; // For some reason I cannot initialize this in the constructor like the other things.  Odd.  
     
-    
+	// make these final (and static? or do we assume/make the whole class a Singleton?) if possible; once it's created [at program initialization] it should never be edited.
+	// ColorList is map of String (color name), String (hex # for the color) and Int (position on the color wheel)
+		// and will usually be accessible by the color's name, so that's the Key.
+    final private TreeMap<String, Object[]> ColorList; // Object[0] is type Integer, Object[1] is type String
+    final private HashMap<Integer, String> ColorIndex;
+						
     /**
 	 * constructor that initializes various things for pre-processing.
 	 */
-    public Analysis() {
+    public Analysis() throws FileNotFoundException {
     	
     	// Pre-processing for rarity comparisons
     	// a string[] of all breed and gene names
@@ -55,6 +67,64 @@ public class Analysis{
 			geneRarities.put(names[i], values[i]);
 		}
 		
+		
+		// read ../colorInfo.txt into ColorList
+		BufferedReader reader = null;
+		try
+		{
+			reader = new BufferedReader( new FileReader( "../colorInfo.txt" ), 50); // 50 should be plenty, right? 3 for index, 2 commas, 7 for hexcolor, 38 for color word?
+		}
+		catch( FileNotFoundException e )
+		{
+			System.out.println( "colorInfo.txt missing from DAL9001 directory!" );
+			throw e; // halt program if the data files are missing.
+		}
+		
+			// put them in a Collection first
+		TreeMap<String, Object[]> colors = new TreeMap<String, Object[]>();
+		HashMap<Integer, String> indices = new HashMap<Integer, String>(68, 0.986f ); // set initial capacity and load factor to leave one empty bucket, so we don't waste time with any rehashes 
+		
+		try
+		{
+			String line = null;
+			while( (line = reader.readLine()) != null )
+			{
+				int index = Integer.parseInt( line.split(",")[0] );
+				String name = line.split(",")[1];
+				
+				Object[] output = new Object[2];
+				output[0] = index; 
+				output[1] = line.split(",")[2];
+				colors.put( name, output );
+				
+				indices.put( index, name );
+				
+				//System.out.println( line + "->" + output[0] + "," + output[1] );
+				//for( String[] s : colors )
+				//	System.out.println( s[0] + "," + s[1] );
+				//for( int index = 0; index < colors.size(); index++ )
+				//	System.out.println( index + ": " + colors.get(index)[0] + ", " + colors.get(index)[1] );
+
+			}
+			reader.close();
+		}
+		catch( IOException e )
+		{
+			// unexpected read error! 
+			System.out.println( e );
+			ColorList = null;
+			ColorIndex = null;
+			return;
+		}
+		
+		//for( String[] s : colors )
+		//	System.out.println( s[0] + "," + s[1] );
+		
+			// then use constructor on that Collection
+		ColorList = new TreeMap<String, Object[]>( colors );
+		ColorIndex = new HashMap<Integer, String>( indices );
+		//for( String[] s : ColorList )
+		//	System.out.println( s[0] + "," + s[1] );
 	}
 	
 	
@@ -79,6 +149,15 @@ public class Analysis{
 		return rarity;
 	}
 	
+	public void printColors()
+	{
+		for( int key : ColorIndex.keySet() )
+		{
+			System.out.println( key + ": " + ColorIndex.get( key ) + ", " + ColorList.get( ColorIndex.get( key ) )[1] );
+		}
+
+	}
+
 	
 	/**
 	 * Handy dandy test function
@@ -86,16 +165,26 @@ public class Analysis{
 	 * @param args This parameter is unused.
 	 */
 	public static void main(String[] args) {
-		Analysis modual = new Analysis();
+		Analysis module = null;
+		try
+		{
+			module = new Analysis();
+		}
+		catch( FileNotFoundException e )
+		{
+			return;
+		}
+
+		module.printColors();
 		
 		// Test a few genes on the rarity comparer.  Expected output is 3/97, 1/99, 50/50, 100
-		String output = modual.rarityCompare("Glimmer","Spines");
+		String output = module.rarityCompare("Glimmer","Spines");
 		System.out.println(output);
-		output = modual.rarityCompare("Glimmer","Underbelly");
+		output = module.rarityCompare("Glimmer","Underbelly");
 		System.out.println(output);
-		output = modual.rarityCompare("Glimmer","Circuit");
+		output = module.rarityCompare("Glimmer","Circuit");
 		System.out.println(output);
-		output = modual.rarityCompare("Glimmer","Glimmer");
+		output = module.rarityCompare("Glimmer","Glimmer");
 		System.out.println(output);
 	}
 	
