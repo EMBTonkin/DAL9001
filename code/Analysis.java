@@ -6,9 +6,13 @@
 // Methods:
 	// canBreed(Dragon dragon1, Dragon dragon2): Can two dragons breed together?  Check MatingType and ancestry.  Returns Boolean (The data type, not the familiar)
 	// colorRange(string color1, string color2): two colors enter, a list of color names of the potential range leaves.
+		// done! -SS2
+	
+		// next 3 done?  -SS2
 	// getColorHex(string color): returns the hexadecimal number associated with a color name
 		// also getColorIndex(string color) returns the index of color
 		// and getColorName(int index) returns the color-name of the given index
+		
 	// √ (done) rarityCompare(string gene1, string gene2): takes in the name of two genes (or two dragon breeds) and returns two percentages, saying the likely hood of each gene for the offspring.  If same, both are 100%
 	// As the DAL program grows, more analysis will be added, and it will be here.  
 	
@@ -198,7 +202,7 @@ public class Analysis{
 	 *  
 	 * @param color Index to lookup.
 	 *
-	 * @return Indexed name, or "null" if index does not exist 
+	 * @return Indexed name, or null if index does not exist 
 	 * @author StrykeSlammerII
 	 */
 	public String getColorName( int index )
@@ -207,6 +211,68 @@ public class Analysis{
 				
 		return output;
 	}
+	
+	/**
+	 * return an array of color names along the color wheel from color1 to color2.
+	 *  
+	 * @param color1 One end of the color range
+	 * @param color2 The other end of the color range
+	 *
+	 * @return array of strings, or null if either color is not indexed. 
+	 * @author StrykeSlammerII
+	 */
+	public String[] getColorRange( String color1, String color2 )
+	{
+		if( color1 == color2 && (getColorIndex( color1 ) > -1 ) )
+			return new String[]{ color1 };
+		
+		int index1 = getColorIndex( color1 );
+		int index2 = getColorIndex( color2 ); 
+		
+		if( index1 * index2 < 2 ) // if both are not found, the product is 1; if both are index 1, we have already returned; if only 1 is not found, product is < 0
+			return null;
+		
+		// index1 must be < index2
+		if( index2 < index1 ) // 
+		{
+			int swap = index2;
+			index2 = index1;
+			index1 = swap;
+		}
+		
+		int range = index2 - index1 + 1; // if both elements are the same, there's still a single element in the range
+			//System.out.println( index1 + " - " + index2 + " = " + range );
+			
+		String[] output;
+		if( range > ( ColorIndex.size() + 1 )/2 )
+		{
+			output = new String[ index1 + ( ColorIndex.size() + 1 - index2 ) + 1 ]; 
+			
+			int firstIndex = 0;
+			while( ( output[ firstIndex ] = getColorName( index2 + firstIndex ) ) != null )
+			{
+				firstIndex++;
+			}
+			firstIndex--;
+			
+			for( int secondIndex = 1; secondIndex <= index1; secondIndex++ )
+			{
+				output[ firstIndex + secondIndex ] = getColorName( secondIndex );
+			}
+		}
+		else
+		{
+			output = new String[range];
+			for( int index0 = 0; index0 < range; index0++ )
+			{
+				output[ index0 ] = getColorName( index1 + index0 );
+			}
+		}
+		
+		
+		return output;
+	}
+	
 	
 	/**
 	 * Pretty-print method to verify colorinfo.txt was read correctly.
@@ -246,6 +312,55 @@ public class Analysis{
 		System.out.println( "Index of 'Unobtanium' is " + module.getColorIndex( "Unobtanium" ) );
 		System.out.println( "Color # 15 is " + module.getColorName( 15 ) );
 		System.out.println( "Color # -1 is " + module.getColorName( -1 ) );
+		
+		String[] colors = module.getColorRange( "Obsidian", "Obsidian" );
+		String printable = "Range( Obsidian, Obsidian) = { ";
+		for( String s : colors )
+		{
+			printable += s + ", ";
+		}
+		printable += "}";
+		System.out.println( printable );
+		
+		colors = module.getColorRange( "Teal", "Azure" );
+		printable = "Range( Teal, Azure ) = { ";
+		for( String s : colors )
+		{
+			printable += s + ", ";
+		}
+		printable += "}";
+		System.out.println( printable );
+		
+		
+		colors = module.getColorRange( "Obsidian", "Fire" );
+		printable = "Range( Obsidian, Fire ) = { ";
+		for( String s : colors )
+		{
+			printable += s + ", ";
+		}
+		printable += "}";
+		System.out.println( printable );
+		
+		colors = module.getColorRange( "Fire", "Obsidian" );
+		printable = "Range( Fire, Obsidian ) = { ";
+		for( String s : colors )
+		{
+			printable += s + ", ";
+		}
+		printable += "}";
+		System.out.println( printable );
+		
+		colors = module.getColorRange( "Bob", "Bob" );
+		printable = "Range( Bob, Bob ) = " + colors;
+		System.out.println( printable );
+		
+		colors = module.getColorRange( "Bob", "Teal" );
+		printable = "Range( Bob, Teal ) = " + colors;
+		System.out.println( printable );
+		
+		colors = module.getColorRange( "Teal", "Bob" );
+		printable = "Range( Teal, Bob ) = " + colors;
+		System.out.println( printable );
 		
 		// Test a few genes on the rarity comparer.  Expected output is 3/97, 1/99, 50/50, 100
 		String output = module.rarityCompare("Glimmer","Spines");
