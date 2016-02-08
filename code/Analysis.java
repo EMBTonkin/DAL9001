@@ -7,6 +7,8 @@
 	// canBreed(Dragon dragon1, Dragon dragon2): Can two dragons breed together?  Check MatingType and ancestry.  Returns Boolean (The data type, not the familiar)
 	// colorRange(string color1, string color2): two colors enter, a list of color names of the potential range leaves.
 	// getColorHex(string color): returns the hexadecimal number associated with a color name
+		// also getColorIndex(string color) returns the index of color
+		// and getColorName(int index) returns the color-name of the given index
 	// √ (done) rarityCompare(string gene1, string gene2): takes in the name of two genes (or two dragon breeds) and returns two percentages, saying the likely hood of each gene for the offspring.  If same, both are 100%
 	// As the DAL program grows, more analysis will be added, and it will be here.  
 	
@@ -149,6 +151,67 @@ public class Analysis{
 		return rarity;
 	}
 	
+	/**
+	 * Obtain hex-value for the given color.
+	 *  
+	 * @param color Name of color to find a hex-value for.
+	 *
+	 * @return String representing the hex-value of the given color. 
+	 * @author StrykeSlammerII
+	 */
+	public String getColorHex( String color )
+	{
+		Object[] output = ColorList.get( color );
+		String myColor;
+		
+		if( output == null )
+			myColor = "(null)";
+		else
+			myColor = (String)output[1];
+		
+		return myColor;
+	}
+	
+	/**
+	 * Obtain index for the given color.
+	 *  
+	 * @param color Name of color to find index of.
+	 *
+	 * @return 1-based index of the given color; -1 if color does not exist. 
+	 * @author StrykeSlammerII
+	 */
+	public int getColorIndex( String color )
+	{
+		Object[] output = ColorList.get( color );
+		int myIndex;
+		
+		if( output == null )
+			myIndex = -1;
+		else
+			myIndex = (int)output[0];
+		
+		return myIndex;
+	}
+	
+	/**
+	 * Obtain color-name at the given index.
+	 *  
+	 * @param color Index to lookup.
+	 *
+	 * @return Indexed name, or "null" if index does not exist 
+	 * @author StrykeSlammerII
+	 */
+	public String getColorName( int index )
+	{
+		String output = ColorIndex.get( index );
+				
+		return output;
+	}
+	
+	/**
+	 * Pretty-print method to verify colorinfo.txt was read correctly.
+	 * @author StrykeSlammerII
+	 */
 	public void printColors()
 	{
 		for( int key : ColorIndex.keySet() )
@@ -176,6 +239,13 @@ public class Analysis{
 		}
 
 		module.printColors();
+		
+		System.out.println( "Hex value of 'Fire' is " + module.getColorHex( "Fire" ) );
+		System.out.println( "Hex value of 'Unobtanium' is " + module.getColorHex( "Unobtanium" ) );
+		System.out.println( "Index of 'Fire' is " + module.getColorIndex( "Fire" ) );
+		System.out.println( "Index of 'Unobtanium' is " + module.getColorIndex( "Unobtanium" ) );
+		System.out.println( "Color # 15 is " + module.getColorName( 15 ) );
+		System.out.println( "Color # -1 is " + module.getColorName( -1 ) );
 		
 		// Test a few genes on the rarity comparer.  Expected output is 3/97, 1/99, 50/50, 100
 		String output = module.rarityCompare("Glimmer","Spines");
