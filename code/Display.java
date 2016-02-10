@@ -85,7 +85,7 @@ class Display extends JPanel{
 		
 			//add placeholder dragon image
 			try {
-				image= ImageIO.read(new File("MissingNo.gif"));
+				image= ImageIO.read(new File("../images/MissingNo.gif"));
 			
 			
 			}
@@ -133,7 +133,7 @@ class Display extends JPanel{
 		
 			//add placeholder dragon image
 			try {
-				image= ImageIO.read(new File("MissingNo.gif"));
+				image= ImageIO.read(new File("../images/MissingNo.gif"));
 			
 			
 			}
