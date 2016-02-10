@@ -26,35 +26,47 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.BoxLayout;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+
 
 /**
  * Displays Dragon stuff graphically using Swing. 
- * Based on series of projects from CS 231.
- * @author Lizzie Tonkin, lovingly ripped off of bseastwo and professor Kyle Burke
+ * Based on series of projects from Lizzie's CS231.
+ * @author Lizzie Tonkin
  */
-public class DAL9001 extends JFrame
-{
+public class DAL9001 extends JFrame{
+	
+	private boolean running;
 	private Display canvas;
+	private DragonTree tree;
+	
 	
 	/**
 	 * Initializes a display window.  But soon, so much more!
 	 */
-	public DAL9001()
-	{
+	public DAL9001(){
 		// setup the window
 		super("DAL9001");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		this.running = true;
 		
 		// create a panel which will be the View of our MVC
 		this.canvas = new Display();
 		BoxLayout boxLayout = new BoxLayout(this.getContentPane(), BoxLayout.X_AXIS); // top to bottom
     	this.setLayout(boxLayout);
 		
+		
 		// create the side bar, which will be the Controller of our MVC 
+		JButton quit = new JButton("Quit");
+		Control control = new Control();
+		quit.addActionListener(control);
 		
 		JButton reset = new JButton("Reset");
-		JButton quit = new JButton("Quit");
+		reset.addActionListener(control);
+		
 		JLabel status = new JLabel("Text is here, this can be changed");
 		
 		JPanel panel = new JPanel();
@@ -81,10 +93,45 @@ public class DAL9001 extends JFrame
 	}
 	
 	
+	/**
+	 * Loads a DRG file into the program
+	 *
+	 * @param filename String file path to the file we will open.
+	 */
+	public void openDRGFile(String filename){
+		this.tree = new DragonTree(filename);
+	}
+	
+	
+	/**
+	 * Quits the program.
+	 */
+	public void quit(){
+		this.dispose();
+	}	
+	
+	
+	/**
+	 * Inner class that will hopefully to all the listening for key mouse and button stuff
+	 * right now just button stuff, and even then just Quits.
+	 */
+	private class Control extends KeyAdapter implements ActionListener{
+		public void actionPerformed(ActionEvent event){
+			
+			// if the quit button is pressed call the quit function
+			if( event.getActionCommand().equalsIgnoreCase("Quit") ) {
+				quit();
+			}
+			else if( event.getActionCommand().equalsIgnoreCase("Reset") ) {
+				System.out.println("Nothing to reset yet");
+			}
+		}	
+	}
 		
 	// Main function
 	// Runs the program, also used for testing since we are testing UI.
 	public static void main(String[] args)  {
 		DAL9001 thing = new DAL9001();
+		thing.openDRGFile("../demo.drg");
 	}
 }

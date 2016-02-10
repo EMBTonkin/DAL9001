@@ -80,6 +80,21 @@ class Display extends JPanel{
 		 */
 		public void paintComponent(Graphics g){
 			super.paintComponent(g);
+			// test image and text used as an example so I can remember when I come back.
+			BufferedImage image = null;
+		
+			//add placeholder dragon image
+			try {
+				image= ImageIO.read(new File("MissingNo.gif"));
+			
+			
+			}
+			catch (IOException e) {
+				System.out.println("Invalid image ABANDON SHIP\n");
+				System.out.println(e);
+			}
+		
+			g.drawImage(image, 35, 35, null);
 		}
 		
 	} //end of DisplayPanel
