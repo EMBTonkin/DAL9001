@@ -52,11 +52,16 @@ import java.io.OutputStreamWriter;
 public class Dragon{
 	
 	private Element us; // Us, that is this dragon.  The XML node
+	private DragonDisplay displayStuff; // the image objects and other things
 	
 	// constructor for when there is already an XML object with the proper values
 	public Dragon(Node aDragon) {
-		us = (Element) aDragon;
+		this.us = (Element) aDragon;
 		//System.out.println(us.getElementsByTagName("id").item(0).getTextContent());
+		
+		// create, then add the Dragon Display object.
+		DragonDisplay placeholder = new DragonDisplay(this);
+		this.displayStuff = placeholder;
 	}
 
 	/**
@@ -178,8 +183,9 @@ public class Dragon{
 			System.out.println( e.getMessage() );
 		}
 		
-
-		
+		// create, then add the Dragon Display object.
+		DragonDisplay placeholder = new DragonDisplay(this);
+		this.displayStuff = placeholder;
 	}
 	
 	
@@ -190,6 +196,16 @@ public class Dragon{
 	 */
 	public Node getNode(){
 		return us.cloneNode(true);	
+	}
+	
+	
+	/**
+	 * Get the DragonDisplay of this dragon
+	 * 
+	 * @return the DragonDisplay object, which you can then get stuff from.
+	 */
+	public DragonDisplay getDragonDisplay(){
+		return this.displayStuff;	
 	}
 	
 	

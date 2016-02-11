@@ -34,7 +34,7 @@
 </comment>
       
       <DAL9000> // here is some stuff my program would have.
-        <image>194792.gif</image>
+        <image>../images/7410122.gif</image>
         <gen>1</gen>
         
         <ancestors2></ancestors2>
@@ -49,8 +49,8 @@
         <descendants4></descendants4>
         <descendants5></descendants5>
         
-        <xPos>200</xPos>
-        <yPos>100</yPos>
+        <xPos>0</xPos>
+        <yPos>0</yPos>
       </DAL9000>
     </Dragon>
   
@@ -75,7 +75,7 @@
 </comment>
       
       <DAL9000> // here is some stuff my program would have.
-        <image>194792.gif</image>
+        <image>../images/7793603.gif</image>
         <gen>1</gen>
         
         <ancestors2></ancestors2>
@@ -90,8 +90,8 @@
         <descendants4></descendants4>
         <descendants5></descendants5>
         
-        <xPos>200</xPos>
-        <yPos>100</yPos>
+        <xPos>100</xPos>
+        <yPos>0</yPos>
       </DAL9000>
     </Dragon>
     
@@ -118,7 +118,7 @@
 </comment>
       
       <DAL9000> // here is some stuff my program would have.
-        <image>194792.gif</image>
+        <image>../images/7881402.gif</image>
         <gen>2</gen>
         
         <ancestors2></ancestors2>
@@ -131,7 +131,7 @@
         <descendants4></descendants4>
         <descendants5></descendants5>
         
-        <xPos>200</xPos>
+        <xPos>0</xPos>
         <yPos>100</yPos>
       </DAL9000>
     </Dragon>
@@ -156,7 +156,7 @@
 </comment>
       
       <DAL9000> // here is some stuff my program would have.
-        <image>194792.gif</image>
+        <image>../images/7881403.gif</image>
         <gen>2</gen>
         
         <ancestors2></ancestors2>
@@ -169,7 +169,7 @@
         <descendants4></descendants4>
         <descendants5></descendants5>
         
-        <xPos>200</xPos>
+        <xPos>100</xPos>
         <yPos>100</yPos>
       </DAL9000>
     </Dragon>
@@ -194,7 +194,7 @@
 </comment>
       
       <DAL9000> // here is some stuff my program would have.
-        <image>194792.gif</image>
+        <image>../images/7945090.gif</image>
         <gen>1</gen>
         
         <ancestors2></ancestors2>
@@ -208,7 +208,7 @@
         <descendants5></descendants5>
         
         <xPos>200</xPos>
-        <yPos>100</yPos>
+        <yPos>0</yPos>
       </DAL9000>
     </Dragon>
     <Dragon>
@@ -233,7 +233,7 @@
 </comment>
       
       <DAL9000> // here is some stuff my program would have.
-        <image>194792.gif</image>
+        <image>../images/8033892.gif</image>
         <gen>3</gen>
         
         <ancestors2>
@@ -249,8 +249,8 @@
         <descendants4></descendants4>
         <descendants5></descendants5>
         
-        <xPos>200</xPos>
-        <yPos>100</yPos>
+        <xPos>0</xPos>
+        <yPos>200</yPos>
       </DAL9000>
     </Dragon>
   </Family>

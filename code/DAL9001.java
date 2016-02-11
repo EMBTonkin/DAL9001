@@ -29,7 +29,12 @@ import javax.swing.BoxLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
+import javax.swing.event.MouseInputAdapter;
+import java.awt.event.MouseEvent;
 
+import java.util.ArrayList;
+import java.util.HashSet;	
+import java.util.Iterator;
 
 /**
  * Displays Dragon stuff graphically using Swing. 
@@ -38,9 +43,10 @@ import java.awt.event.KeyAdapter;
  */
 public class DAL9001 extends JFrame{
 	
-	private boolean running;
-	private Display canvas;
-	private DragonTree tree;
+	private Display canvas; // the view
+	private DragonTree tree; // the model
+	private int baseX; // used to handle mouse dragging
+	private int baseY; // used to handle mouse dragging
 	
 	
 	/**
@@ -51,13 +57,13 @@ public class DAL9001 extends JFrame{
 		super("DAL9001");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		this.running = true;
-		
 		// create a panel which will be the View of our MVC
 		this.canvas = new Display();
 		BoxLayout boxLayout = new BoxLayout(this.getContentPane(), BoxLayout.X_AXIS); // top to bottom
     	this.setLayout(boxLayout);
-		
+    	MouseControl mousycontrol = new MouseControl();
+    	this.canvas.addMouseListener(mousycontrol); // why is java dumb?
+		this.canvas.addMouseMotionListener(mousycontrol);
 		
 		// create the side bar, which will be the Controller of our MVC 
 		JButton quit = new JButton("Quit");
@@ -86,10 +92,7 @@ public class DAL9001 extends JFrame{
 		
 		this.pack();
 		this.setVisible(true);
-		
-		Graphics g = canvas.getGraphics();
-		canvas.update( g );
-		
+	
 	}
 	
 	
@@ -100,6 +103,9 @@ public class DAL9001 extends JFrame{
 	 */
 	public void openDRGFile(String filename){
 		this.tree = new DragonTree(filename);
+		// once we load the tree, display it.
+		HashSet<Dragon> dragons = (HashSet<Dragon>) this.tree.getDragonsByExalted(false);
+		canvas.update(dragons);
 	}
 	
 	
@@ -112,7 +118,7 @@ public class DAL9001 extends JFrame{
 	
 	
 	/**
-	 * Inner class that will hopefully to all the listening for key mouse and button stuff
+	 * Inner class that will hopefully to all the listening for key and button stuff
 	 * right now just button stuff, and even then just Quits.
 	 */
 	private class Control extends KeyAdapter implements ActionListener{
@@ -127,6 +133,39 @@ public class DAL9001 extends JFrame{
 			}
 		}	
 	}
+	
+	/**
+	 * Inner class that will hopefully to all the listening for mouse stuff
+	 */
+	private class MouseControl extends MouseInputAdapter{
+			
+		// get the starting point for dragging
+		public void mousePressed(MouseEvent e) {
+		   baseX = e.getX();
+		   baseY = e.getY();
+		}
+			
+		// image moving calculations
+		public void mouseDragged(MouseEvent e) {
+			// Get the active dragons
+			HashSet<Dragon> dragons = (HashSet<Dragon>) tree.getDragonsByExalted(false);
+			// create an iterator
+			Iterator<Dragon> iterator = dragons.iterator(); 
+			// update x and y values by the delta
+			while (iterator.hasNext()){
+				Dragon current = iterator.next();
+				current.setY(current.getY()+e.getY()-baseY);  
+				current.setX(current.getX()+e.getX()-baseX); 
+			}
+			// need to reset the base stuff every time this function is called
+			baseX = e.getX();
+			baseY = e.getY();
+			// display the changes
+			canvas.update(dragons);
+			
+		}
+
+	}	
 		
 	// Main function
 	// Runs the program, also used for testing since we are testing UI.

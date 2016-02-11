@@ -17,6 +17,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;
 
+import java.util.HashSet;
+import java.util.Iterator;
 
 
 /**
@@ -47,10 +49,11 @@ class Display extends JPanel{
 	
 	/**
 	 * Updates the display
+	 * @param dragons a HashSet of dragons currently being displayed
 	 */
-	public void update() {
+	public void update(HashSet<Dragon> dragons) {
 		Graphics g = panel.getGraphics();
-		panel.paintComponent( g );
+		panel.paintComponent( g, dragons );
 		Graphics g2 = header.getGraphics();
 		header.paintComponent( g2 );
 		this.requestFocus();
@@ -77,24 +80,20 @@ class Display extends JPanel{
 		 * object is used to draw.
 		 * 
 		 * @param g		the Graphics object used for drawing
+		 * @param dragons a HashSet of dragons currently being displayed
 		 */
-		public void paintComponent(Graphics g){
+		public void paintComponent(Graphics g, HashSet<Dragon> dragons){
 			super.paintComponent(g);
-			// test image and text used as an example so I can remember when I come back.
-			BufferedImage image = null;
-		
-			//add placeholder dragon image
-			try {
-				image= ImageIO.read(new File("../images/MissingNo.gif"));
-			
-			
-			}
-			catch (IOException e) {
-				System.out.println("Invalid image ABANDON SHIP\n");
-				System.out.println(e);
+			// create an iterator
+			Iterator<Dragon> iterator = dragons.iterator(); 
+
+			// draw each dragon's image in it's position
+			while (iterator.hasNext()){
+				Dragon current = iterator.next();
+				g.drawImage(current.getDragonDisplay().getImage(), current.getX(), current.getY(), null);
 			}
 		
-			g.drawImage(image, 35, 35, null);
+			
 		}
 		
 	} //end of DisplayPanel
