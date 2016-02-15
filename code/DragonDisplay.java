@@ -23,7 +23,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-
+import java.awt.Rectangle;
 
 
 
@@ -34,6 +34,7 @@ class DragonDisplay{
 	
 	private Dragon ourDragon;
 	private BufferedImage image;
+	private Rectangle boundingBox;
 	
 	/**
 	 * Create the display objects bassed off of the Dragon's data, and store, but do not display them.
@@ -61,9 +62,18 @@ class DragonDisplay{
 				System.out.println(ee);
 			}
 		}
+		//need to add 150 to Y because the rectangle counts the header as part of the grid.  Odd.
+		boundingBox = new Rectangle(ourDragon.getX(),ourDragon.getY()+150,image.getWidth(), image.getHeight()); 
 		
 	}	
 	
+	/**
+	 * Get the dragon associated with this object.
+	 * @return Dragon.
+	 */
+	public Dragon getDragon(){
+		return this.ourDragon;
+	}
 	
 	/**
 	 * Get the graphical representation of this dragon.  So pretty.
@@ -72,6 +82,16 @@ class DragonDisplay{
 	public BufferedImage getImage(){
 		return this.image;
 	}
+	
+	/**
+	 * Get the Rectangle that occupies the same space as the image, and provides dimensions for the frame.
+	 * @return Rectangle for this dragon.
+	 */
+	public Rectangle getBoundingBox(){
+		return this.boundingBox;
+	}
+	
+	
 	
 // Since this is so closely related to UI, once again, no test function besides just running the program and seeing what happens.	
 }

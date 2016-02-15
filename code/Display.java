@@ -91,6 +91,8 @@ class Display extends JPanel{
 			while (iterator.hasNext()){
 				Dragon current = iterator.next();
 				g.drawImage(current.getDragonDisplay().getImage(), current.getX(), current.getY(), null);
+				g.drawRect(current.getX(), current.getY(), (int) current.getDragonDisplay().getBoundingBox().getWidth(), (int) current.getDragonDisplay().getBoundingBox().getHeight());
+
 			}
 		
 			

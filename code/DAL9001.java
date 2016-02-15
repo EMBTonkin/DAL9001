@@ -16,6 +16,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -139,10 +140,25 @@ public class DAL9001 extends JFrame{
 	 */
 	private class MouseControl extends MouseInputAdapter{
 			
+		// determine which if any dragon was clicked
+		public void mouseClicked(MouseEvent e) {
+			HashSet<Dragon> dragons = (HashSet<Dragon>) tree.getDragonsByExalted(false);
+			// create an iterator
+			Iterator<Dragon> iterator = dragons.iterator(); 
+			// update x and y values by the delta
+			while (iterator.hasNext()){
+				Dragon current = iterator.next();
+				if (current.getDragonDisplay().getBoundingBox().contains(e.getX(),e.getY())){
+					// put a SetActiveDragon function here once it's written.  
+					System.out.println("You clicked dragon number "+current.getID());
+				}
+			}
+		}
+		
 		// get the starting point for dragging
 		public void mousePressed(MouseEvent e) {
-		   baseX = e.getX();
-		   baseY = e.getY();
+			baseX = e.getX();
+			baseY = e.getY();
 		}
 			
 		// image moving calculations
@@ -156,6 +172,8 @@ public class DAL9001 extends JFrame{
 				Dragon current = iterator.next();
 				current.setY(current.getY()+e.getY()-baseY);  
 				current.setX(current.getX()+e.getX()-baseX); 
+				//need to add 150 to Y because the rectangle counts the header as part of the grid.  Odd.
+				current.getDragonDisplay().getBoundingBox().setLocation(current.getX(),current.getY()+150);
 			}
 			// need to reset the base stuff every time this function is called
 			baseX = e.getX();
