@@ -54,8 +54,6 @@ class Display extends JPanel{
 	public void update(HashSet<Dragon> dragons) {
 		Graphics g = panel.getGraphics();
 		panel.paintComponent( g, dragons );
-		Graphics g2 = header.getGraphics();
-		header.paintComponent( g2 );
 		this.requestFocus();
 	}
 	
