@@ -13,6 +13,7 @@
         <int>4</int>
       </children>
       
+      <hatchDay>10-05-2015</hatchDay>
       <exalted>False</exalted>
       <matingType>True</matingType>
       
@@ -63,13 +64,23 @@
         <int>4</int>
       </children>
       
+      <hatchDay>10-05-2015</hatchDay>
       <exalted>False</exalted>
       <matingType>False</matingType>
       
       <species>Tundra</species> 
-      <primary>Red Iridescent</primary>
-      <secondary>Red Shimmer</secondary>
-      <tertiary>Red Glimmer</tertiary>
+      <primary>
+        <color>Red</color>
+        <gene>Iridescent</gene>
+      </primary>
+      <secondary>
+        <color>Red</color>
+        <gene>Shimmer</gene>
+      </secondary>
+      <tertiary>
+        <color>Red</color>
+        <gene>Glimmer</gene>
+      </tertiary>
       
       <comment>The floofiest of all dragons.
 </comment>
@@ -106,13 +117,23 @@
       	<int>6</int>
       </children>
       
+      <hatchDay>10-05-2015</hatchDay>
       <exalted>False</exalted>
       <matingType>True</matingType>
       
       <species>Tundra</species> 
-      <primary>Blue Basic</primary>
-      <secondary>White Basic</secondary>
-      <tertiary>Red Underbelly</tertiary>
+      <primary>
+        <color>Blue</color>
+        <gene>Basic</gene>
+      </primary>
+      <secondary>
+        <color>White</color>
+        <gene>Basic</gene>
+      </secondary>
+      <tertiary>
+        <color>Red</color>
+        <gene>Underbelly</gene>
+      </tertiary>
       
       <comment>My colors are the French Flag!  cool
 </comment>
@@ -144,13 +165,23 @@
       </parents> 
       <children></children>
       
+      <hatchDay>10-05-2015</hatchDay>
       <exalted>False</exalted>
       <matingType>True</matingType>
       
       <species>Tundra</species> 
-      <primary>Blue Basic</primary>
-      <secondary>White Basic</secondary>
-      <tertiary>Red Underbelly</tertiary>
+      <primary>
+        <color>Blue</color>
+        <gene>Basic</gene>
+      </primary>
+      <secondary>
+        <color>White</color>
+        <gene>Basic</gene>
+      </secondary>
+      <tertiary>
+        <color>Red</color>
+        <gene>Underbelly</gene>
+      </tertiary>
       
       <comment>It's a Crimspiracy.
 </comment>
@@ -181,13 +212,23 @@
       	<int>6</int>
       </children>
       
+      <hatchDay>10-05-2015</hatchDay>
       <exalted>False</exalted>
       <matingType>False</matingType>
       
       <species>Mirror</species> 
-      <primary>Royal Basic</primary>
-      <secondary>Royal Basic</secondary>
-      <tertiary>Purple Underbelly</tertiary>
+      <primary>
+        <color>Royal</color>
+        <gene>Basic</gene>
+      </primary>
+      <secondary>
+        <color>Royal</color>
+        <gene>Basic</gene>
+      </secondary>
+      <tertiary>
+        <color>Purple</color>
+        <gene>Underbelly</gene>
+      </tertiary>
       
       <comment>My favorite color!
 
@@ -220,13 +261,23 @@
       </parents> 
       <children></children>
       
+      <hatchDay>10-05-2015</hatchDay>
       <exalted>False</exalted>
       <matingType>True</matingType>
       
       <species>Mirror</species> 
-      <primary>White Basic</primary>
-      <secondary>White Basic</secondary>
-      <tertiary>Purple Underbelly</tertiary>
+      <primary>
+        <color>White</color>
+        <gene>Basic</gene>
+      </primary>
+      <secondary>
+        <color>White</color>
+        <gene>Basic</gene>
+      </secondary>
+      <tertiary>
+        <color>Purple</color>
+        <gene>Underbelly</gene>
+      </tertiary>
       
       <comment>XXY!
 
