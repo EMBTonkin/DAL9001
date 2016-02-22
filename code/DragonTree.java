@@ -216,6 +216,15 @@ public class DragonTree{
 	}
 	
 	/**
+	 * Get the Document which maintains this DragonTree's XML backing store
+	 * 
+	 * @return the XML Document
+	 */
+	public Document getDocument(){
+		return tree;	
+	}
+	
+	/**
 	 * Save the DragonTree in it's current state to a file.  Will be in DRG format
 	 * 
 	 * @param filename String the name of the file you want to save to.  Don't forget the .drg extension!
@@ -255,7 +264,7 @@ public class DragonTree{
 	{
 		DragonTree lair = new DragonTree();
 		// add a 'blank' dragon template
-		Dragon derg = new Dragon();
+		Dragon derg = new Dragon( lair.getDocument() );
 		lair.addDragon( derg );
 				
 		// give the previously-added dragon an ID
@@ -272,12 +281,12 @@ public class DragonTree{
 			// set previous derg's gen
 		derg.setGen( 1 );
 			// add two more dergs at gen2
-		derg = new Dragon();
+		derg = new Dragon( lair.getDocument() );
 		derg.setGen( 2 );
 		derg.setName( "Bob" );
 		lair.addDragon( derg );
 		
-		derg = new Dragon();
+		derg = new Dragon( lair.getDocument() );
 		derg.setGen( 2 );
 		derg.setName( "Vila" );
 		lair.addDragon( derg );
