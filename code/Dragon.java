@@ -70,70 +70,83 @@ public class Dragon{
 		<Dragon>
 		  <id>1</id>
 		  <name>Scale</name>
-		  <parents/> 
-		  <children/>
+		  <parents></parents> 
+		  <children>
+			<int>3</int>
+			<int>4</int>
+		  </children>
 		  
+		  <hatchDay>10-05-2015</hatchDay>
 		  <exalted>False</exalted>
 		  <matingType>True</matingType>
 		  
 		  <species>Mirror</species> 
-		  <primary>Blue Basic</primary>
-		  <secondary>Blue Basic</secondary>
-		  <tertiary>Blue Underbelly</tertiary>
+		  <primary>
+			<color>Blue</color>
+			<gene>Basic</gene>
+		  </primary>
+		  <secondary>
+			<color>White</color>
+			<gene>Basic</gene>
+		  </secondary>
+		  <tertiary>
+			<color>Red</color>
+			<gene>Underbelly</gene>
+		  </tertiary>
 		  
 		  <comment>Favorite Dragon</comment>
 		  
 		  <DAL9000> // here is some stuff my program would have.
-			<image>194792.gif</image>
+			<image>../images/7410122.gif</image>
 			<gen>1</gen>
 			
-			<ancestors2/>
-			<ancestors3/>
-			<ancestors4/>
-			<ancestors5/>
+			<ancestors2></ancestors2>
+			<ancestors3></ancestors3>
+			<ancestors4></ancestors4>
+			<ancestors5></ancestors5>
 			
-			<descendants2>6</descendants2>
-			<descendants3/>
-			<descendants4/>
-			<descendants5/>
+			<descendants2>
+			  <int>6</int>
+			</descendants2>
+			<descendants3></descendants3>
+			<descendants4></descendants4>
+			<descendants5></descendants5>
 			
-			<xPos>200</xPos>
-			<yPos>100</yPos>
+			<xPos>0</xPos>
+			<yPos>0</yPos>
 		  </DAL9000>
 		</Dragon>
 		---
 		@author StrykeSlammerII
 		
+		@param doc is the main Document passed in from DragonTree, so there is no confusion as to what Document all these Nodes are attached to. 
 		Test code is in DragonTree.java; possibly bad design but this class has no self-contained print/save functionality, yet. 
 	*/
-	public Dragon()
-	{
-		// apparently we need a Document to do the work?
-		Document doc;
-		try
-		{
-			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument(); // seems convoluted but here we are.
-		}
-		catch( ParserConfigurationException pce )
-		{
-			System.out.println( pce.getMessage() );
-			doc = null;
-		}
-		
-		DOMConfiguration config = doc.getDomConfig();
-		config.setParameter( "namespaces", false );
+	public Dragon(Document doc)
+	{	
 		
 		// create primary Element and children Elements
 		us = doc.createElement("Dragon");
 		us.appendChild(doc.createElement("id"));
 		us.appendChild(doc.createElement("name"));
-		us.appendChild(doc.createElement("parents"));
-		us.appendChild(doc.createElement("children"));
+		us.appendChild(doc.createElement("parents")); // empty array thus far
+		us.appendChild(doc.createElement("children")); // empty array thus far
+		us.appendChild(doc.createElement("hatchDay"));
 		us.appendChild(doc.createElement("exalted"));
 		us.appendChild(doc.createElement("matingType"));
 		us.appendChild(doc.createElement("species"));
-		us.appendChild(doc.createElement("primary"));
-		us.appendChild(doc.createElement("tertiary"));
+		Element primary = doc.createElement("primary");
+		primary.appendChild(doc.createElement("color"));
+		primary.appendChild(doc.createElement("gene"));
+		us.appendChild( primary );
+		Element secondary = doc.createElement("secondary");
+		secondary.appendChild(doc.createElement("color"));
+		secondary.appendChild(doc.createElement("gene"));
+		us.appendChild( secondary );
+		Element tertiary = doc.createElement("tertiary");
+		tertiary.appendChild(doc.createElement("color"));
+		tertiary.appendChild(doc.createElement("gene"));
+		us.appendChild( tertiary );
 		us.appendChild(doc.createElement("comment"));
 		
 		// and children of DAL9000 tag
@@ -150,8 +163,12 @@ public class Dragon{
 		dal.appendChild(doc.createElement("descendants3"));
 		dal.appendChild(doc.createElement("descendants4"));
 		dal.appendChild(doc.createElement("descendants5"));
-		dal.appendChild(doc.createElement("xPos"));
-		dal.appendChild(doc.createElement("yPos"));
+		Element xpos = doc.createElement("xPos");
+		xpos.appendChild(doc.createTextNode("0"));
+		dal.appendChild(xpos);
+		Element ypos = doc.createElement("yPos");
+		ypos.appendChild(doc.createTextNode("0"));
+		dal.appendChild(ypos);
 		
 		// System.out.println( generation + ", size: " + generation.getElementsByTagName("*").getLength() );
 		
@@ -160,7 +177,7 @@ public class Dragon{
 		us.appendChild( dal );		
 		// System.out.println( us + ", size: " + us.getElementsByTagName("*").getLength() );
 		
-		doc.appendChild( us );
+		doc.getDocumentElement().appendChild( us ); // can't append an Element to a document (??) -SS2
 		
 		// System.out.println( doc + ", size: " + doc.getElementsByTagName("*").getLength() );
 		
@@ -782,7 +799,7 @@ public class Dragon{
 		System.out.println("\nTest getColor() on primary.  Expected result: 'Blue'");
 		System.out.println(testSubject.getColor(1));
 		
-		System.out.println("\nTest getColor() on secondary.  Expected result: 'While'");
+		System.out.println("\nTest getColor() on secondary.  Expected result: 'White'");
 		System.out.println(testSubject.getColor(2));
 		
 		System.out.println("\nTest getColor() on tertiarty.  Expected result: 'Red'");
