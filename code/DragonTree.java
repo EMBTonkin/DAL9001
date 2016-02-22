@@ -196,7 +196,7 @@ public class DragonTree{
 	
 	/**
 		@author StrykeSlammerII
-		@param exalted do we want exalted dragons (true) or active dragons (false) ?
+		@param exalted do we want exalted dragons (true) or active dragons (false)
 		@return (Set of type Dragon) all dragons in this DragonTree with the requested exalt status 
 	*/
 	public Set<Dragon> getDragonsByExalted( boolean exalted )
