@@ -78,15 +78,7 @@ class Display extends JPanel{
 	public void setActiveDragon(Dragon toBeActive){
 		Graphics g = header.getGraphics();
 		this.active = toBeActive;
-		if (toBeActive == null){
-			System.out.println("Deactivate");
-			this.header.paintComponent(g,this.active);
-			
-		}
-		else{
-			System.out.println("Make it active");
-			this.header.paintComponent(g,this.active);
-		}
+		this.header.paintComponent(g,this.active);
 	}
 	
 	
@@ -101,7 +93,6 @@ class Display extends JPanel{
 		public DisplayPanel(){
 			super();
 			this.setPreferredSize(new Dimension(1250, 750));
-			this.setBackground(new Color(100,100,0));
 		}
 
 		/**
@@ -157,7 +148,7 @@ class Display extends JPanel{
 			this.setPreferredSize(new Dimension(1500, 150));
 			this.setMaximumSize(new Dimension(1500, 150));
 			this.setMinimumSize(new Dimension(1500, 150));
-			this.setBackground(new Color(0,255,255));
+			this.setBackground(new Color(218,214,201));
 			
 			//create a scroll area with a text area inside to display the dragon's notes.
 			this.text = new JTextArea ( 8, 20 ); 

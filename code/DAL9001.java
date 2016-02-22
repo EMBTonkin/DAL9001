@@ -96,7 +96,7 @@ public class DAL9001 extends JFrame{
 		panel.setPreferredSize(new Dimension(200, 1000)); // nessasarry to set all three for a fixed size.
 		panel.setMaximumSize(new Dimension(200, 1000));
 		panel.setMinimumSize(new Dimension(200, 1000));
-		panel.setBackground(new Color(255,0,0));
+		panel.setBackground(new Color(113,30,15));
 		
 		
 		// bring our beautiful creation together.
@@ -171,7 +171,6 @@ public class DAL9001 extends JFrame{
 				if (current.getDragonDisplay().getBoundingBox().contains(e.getX(),e.getY())){
 					// If the click was in a box, set the clicked dragon variable to that Dragon 
 					clickedDragon = current;
-					System.out.println("You clicked dragon number "+current.getID());
 				}
 			}
 			// if we clicked a dragon, set it to the active dragon
