@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.HashSet;	
 import java.util.Iterator;
 
+import java.io.FileNotFoundException;
+
 /**
  * Displays Dragon stuff graphically using Swing. 
  * Based on series of projects from Lizzie's CS231.
@@ -48,6 +50,8 @@ public class DAL9001 extends JFrame{
 	private DragonTree tree; // the model
 	private int baseX; // used to handle mouse dragging
 	private int baseY; // used to handle mouse dragging
+	private Dragon activeDragon;
+	private Analysis analysis;
 	
 	
 	/**
@@ -58,8 +62,16 @@ public class DAL9001 extends JFrame{
 		super("DAL9001");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		// load function libraries
+		try{
+			this.analysis = new Analysis();
+		}
+		catch(FileNotFoundException e){
+			quit();
+		}
+		
 		// create a panel which will be the View of our MVC
-		this.canvas = new Display();
+		this.canvas = new Display(this.analysis);
 		BoxLayout boxLayout = new BoxLayout(this.getContentPane(), BoxLayout.X_AXIS); // top to bottom
     	this.setLayout(boxLayout);
     	MouseControl mousycontrol = new MouseControl();
@@ -93,7 +105,12 @@ public class DAL9001 extends JFrame{
 		
 		this.pack();
 		this.setVisible(true);
-	
+		
+		// initialize variables
+		this.activeDragon = null;
+		// initialize state of no selected dragon.
+		canvas.setActiveDragon(this.activeDragon);
+		
 	}
 	
 	
@@ -116,6 +133,8 @@ public class DAL9001 extends JFrame{
 	public void quit(){
 		this.dispose();
 	}	
+	
+	
 	
 	
 	/**
@@ -142,16 +161,28 @@ public class DAL9001 extends JFrame{
 			
 		// determine which if any dragon was clicked
 		public void mouseClicked(MouseEvent e) {
+			Dragon clickedDragon = null;
 			HashSet<Dragon> dragons = (HashSet<Dragon>) tree.getDragonsByExalted(false);
 			// create an iterator
 			Iterator<Dragon> iterator = dragons.iterator(); 
-			// update x and y values by the delta
+			// check to see if click was within any bounding boxes
 			while (iterator.hasNext()){
 				Dragon current = iterator.next();
 				if (current.getDragonDisplay().getBoundingBox().contains(e.getX(),e.getY())){
-					// put a SetActiveDragon function here once it's written.  
+					// If the click was in a box, set the clicked dragon variable to that Dragon 
+					clickedDragon = current;
 					System.out.println("You clicked dragon number "+current.getID());
 				}
+			}
+			// if we clicked a dragon, set it to the active dragon
+			if (clickedDragon != null){
+				activeDragon = clickedDragon;
+				canvas.setActiveDragon(clickedDragon);
+			}
+			// Otherwise we clicked nothing and if there is something active, de-activate it
+			else if (activeDragon != null){
+				activeDragon = null;
+				canvas.setActiveDragon(clickedDragon);
 			}
 		}
 		
