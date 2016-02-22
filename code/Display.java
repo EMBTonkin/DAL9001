@@ -10,7 +10,9 @@
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Dimension;
+import java.awt.BasicStroke;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -122,6 +124,14 @@ class Display extends JPanel{
 				g.drawRect(current.getX(), current.getY(), (int) current.getDragonDisplay().getBoundingBox().getWidth(), (int) current.getDragonDisplay().getBoundingBox().getHeight());
 
 			}
+			
+			// if there is an active dragon draw a green frame around it.
+			if (active != null){
+				g.setColor(Color.green);
+				Graphics2D g2 = (Graphics2D) g;
+				g2.setStroke(new BasicStroke(5));
+				g2.drawRect(active.getX(), active.getY(), (int) active.getDragonDisplay().getBoundingBox().getWidth(), (int) active.getDragonDisplay().getBoundingBox().getHeight());
+			}
 		
 			
 		}
@@ -231,7 +241,7 @@ class Display extends JPanel{
 			this.scroll.setVisible(true);
 			this.scroll.updateUI();
    			this.text.setText(active.getComment());
-		}
+   		}
 		
 		
 	} //end of DisplayPanel

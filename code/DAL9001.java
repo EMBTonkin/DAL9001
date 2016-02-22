@@ -184,6 +184,8 @@ public class DAL9001 extends JFrame{
 				activeDragon = null;
 				canvas.setActiveDragon(clickedDragon);
 			}
+			// update the dragon display area to reflect which dragon is active
+			canvas.update(dragons);
 		}
 		
 		// get the starting point for dragging
