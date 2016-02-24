@@ -18,14 +18,18 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.awt.FileDialog;
 import java.io.File;
 import java.io.IOException;
+import java.io.FilenameFilter;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JFileChooser;
 import javax.swing.BoxLayout;
+import javax.swing.KeyStroke;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -79,20 +83,26 @@ public class DAL9001 extends JFrame{
 		this.canvas.addMouseMotionListener(mousycontrol);
 		
 		// create the side bar, which will be the Controller of our MVC 
-		JButton quit = new JButton("Quit");
 		Control control = new Control();
+		
+		//Text is here, this can be changed dynamically
+		JLabel status = new JLabel("       Control Panel       ");
+		
+		JButton open = new JButton("Open");
+		open.addActionListener(control);
+		
+		JButton quit = new JButton("Quit");
 		quit.addActionListener(control);
 		
 		JButton reset = new JButton("Reset");
 		reset.addActionListener(control);
 		
-		JLabel status = new JLabel("Text is here, this can be changed");
-		
 		JPanel panel = new JPanel();
 		
+		panel.add(status);
+		panel.add(open);
 		panel.add(quit);
 		panel.add(reset);
-		panel.add(status);
 		panel.setPreferredSize(new Dimension(200, 1000)); // nessasarry to set all three for a fixed size.
 		panel.setMaximumSize(new Dimension(200, 1000));
 		panel.setMinimumSize(new Dimension(200, 1000));
@@ -115,15 +125,30 @@ public class DAL9001 extends JFrame{
 	
 	
 	/**
-	 * Loads a DRG file into the program
-	 *
-	 * @param filename String file path to the file we will open.
+	 * Creates a file dialog and then loads a selected DRG file into the program
 	 */
-	public void openDRGFile(String filename){
-		this.tree = new DragonTree(filename);
-		// once we load the tree, display it.
-		HashSet<Dragon> dragons = (HashSet<Dragon>) this.tree.getDragonsByExalted(false);
-		canvas.update(dragons);
+	public void openDRGFile(){
+		// create a file dialog, and set it to only take .drg files
+		FileDialog fd = new FileDialog(this, "Choose a file", FileDialog.LOAD);
+		fd.setFilenameFilter(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.endsWith(".drg");
+			}
+		});
+		fd.setVisible(true);
+		
+		// analyze the results
+		String filename = fd.getDirectory()+fd.getFile();
+		if (fd.getFile() == null){
+			return;
+		}
+		else{
+			this.tree = new DragonTree(filename);
+			// once we load the tree, display it.
+			HashSet<Dragon> dragons = (HashSet<Dragon>) this.tree.getDragonsByExalted(false);
+			canvas.update(dragons);
+		}
 	}
 	
 	
@@ -147,6 +172,10 @@ public class DAL9001 extends JFrame{
 			// if the quit button is pressed call the quit function
 			if( event.getActionCommand().equalsIgnoreCase("Quit") ) {
 				quit();
+			}
+			// if the quit button is pressed call the quit function
+			else if( event.getActionCommand().equalsIgnoreCase("Open") ) {
+				openDRGFile();
 			}
 			else if( event.getActionCommand().equalsIgnoreCase("Reset") ) {
 				System.out.println("Nothing to reset yet");
@@ -221,6 +250,5 @@ public class DAL9001 extends JFrame{
 	// Runs the program, also used for testing since we are testing UI.
 	public static void main(String[] args)  {
 		DAL9001 thing = new DAL9001();
-		thing.openDRGFile("../demo.drg");
 	}
 }

@@ -118,7 +118,7 @@ class Display extends JPanel{
 			
 			// if there is an active dragon draw a green frame around it.
 			if (active != null){
-				g.setColor(Color.green);
+				g.setColor(new Color(31,172,38));
 				Graphics2D g2 = (Graphics2D) g;
 				g2.setStroke(new BasicStroke(5));
 				g2.drawRect(active.getX(), active.getY(), (int) active.getDragonDisplay().getBoundingBox().getWidth(), (int) active.getDragonDisplay().getBoundingBox().getHeight());
