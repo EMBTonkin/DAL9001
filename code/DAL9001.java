@@ -91,6 +91,9 @@ public class DAL9001 extends JFrame{
 		JButton open = new JButton("Open");
 		open.addActionListener(control);
 		
+		JButton save = new JButton("Save");
+		save.addActionListener(control);
+		
 		JButton quit = new JButton("Quit");
 		quit.addActionListener(control);
 		
@@ -101,6 +104,7 @@ public class DAL9001 extends JFrame{
 		
 		panel.add(status);
 		panel.add(open);
+		panel.add(save);
 		panel.add(quit);
 		panel.add(reset);
 		panel.setPreferredSize(new Dimension(200, 1000)); // nessasarry to set all three for a fixed size.
@@ -151,6 +155,35 @@ public class DAL9001 extends JFrame{
 		}
 	}
 	
+	/**
+	 * Creates a file dialog and then saves the current DragonTree object
+	 */
+	public void saveDRGFile(){
+		// create a file dialog, and set it to only take .drg files
+		FileDialog fd = new FileDialog(this, "Choose destination", FileDialog.SAVE);
+		fd.setFilenameFilter(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.endsWith(".drg");
+			}
+		});
+		fd.setFile(this.tree.getFilename());
+		fd.setVisible(true);
+		
+		String filename = fd.getDirectory()+fd.getFile();
+		// return if they had a blank filename
+		if (fd.getFile() == null){
+			return;
+		}
+		// otherwise, save the file and update the object's filename
+		else{
+			this.tree.save(filename);
+			this.tree.setFilename(fd.getFile());
+		}
+		
+		
+	}
+	
 	
 	/**
 	 * Quits the program.
@@ -173,9 +206,11 @@ public class DAL9001 extends JFrame{
 			if( event.getActionCommand().equalsIgnoreCase("Quit") ) {
 				quit();
 			}
-			// if the quit button is pressed call the quit function
 			else if( event.getActionCommand().equalsIgnoreCase("Open") ) {
 				openDRGFile();
+			}
+			else if( event.getActionCommand().equalsIgnoreCase("Save") ) {
+				saveDRGFile();
 			}
 			else if( event.getActionCommand().equalsIgnoreCase("Reset") ) {
 				System.out.println("Nothing to reset yet");
