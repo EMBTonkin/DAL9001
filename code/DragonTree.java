@@ -61,10 +61,12 @@ public class DragonTree{
 	public DragonTree(String newfilename) {
 		try {
 		
-		filename = newfilename;
+		String[] filepaths = newfilename.split("/");
+		
+		filename = filepaths[filepaths.length-1];
 		
 		// create the entire document object
-		File file = new File(filename);
+		File file = new File(newfilename);
 		DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		tree = dBuilder.parse(file);
 		
@@ -88,7 +90,7 @@ public class DragonTree{
 	*/
 	public DragonTree()
 	{
-		filename = "";
+		filename = "Untitled";
 		
 		try
 		{
@@ -252,6 +254,25 @@ public class DragonTree{
 		} catch (Exception e) {
 		System.out.println(e.getMessage());
     	}
+	}
+	
+	
+	/**
+	 * Get the default name of the file this object will be saved as
+	 *
+	 * @return string the name
+	 */
+	public String getFilename(){
+		return this.filename;
+	}
+	
+	/**
+	 * Set the default name of the file this object will be saved as
+	 *
+	 * @return string the name
+	 */
+	public void setFilename(String newName){
+		this.filename = newName;
 	}
 	
 	
