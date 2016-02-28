@@ -179,9 +179,7 @@ public class DAL9001 extends JFrame{
 		else{
 			this.tree.save(filename);
 			this.tree.setFilename(fd.getFile());
-		}
-		
-		
+		}		
 	}
 	
 	
@@ -259,6 +257,8 @@ public class DAL9001 extends JFrame{
 			
 		// image moving calculations
 		public void mouseDragged(MouseEvent e) {
+			int dx = e.getX()-baseX;
+			int dy = e.getY()-baseY;
 			// Get the active dragons
 			HashSet<Dragon> dragons = (HashSet<Dragon>) tree.getDragonsByExalted(false);
 			// create an iterator
@@ -266,10 +266,9 @@ public class DAL9001 extends JFrame{
 			// update x and y values by the delta
 			while (iterator.hasNext()){
 				Dragon current = iterator.next();
-				current.setY(current.getY()+e.getY()-baseY);  
-				current.setX(current.getX()+e.getX()-baseX); 
-				//need to add 150 to Y because the rectangle counts the header as part of the grid.  Odd.
-				current.getDragonDisplay().getBoundingBox().setLocation(current.getX(),current.getY()+150);
+				current.setX(current.getX()+dx);
+				current.setY(current.getY()+dy); 
+				current.getDragonDisplay().translate(dx,dy);
 			}
 			// need to reset the base stuff every time this function is called
 			baseX = e.getX();

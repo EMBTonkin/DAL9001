@@ -68,6 +68,16 @@ class DragonDisplay{
 	}	
 	
 	/**
+	 * Assuming constant motion on all levels, moves all objects involved in displaying a dragon
+	 * @param dx intager how much x moved.
+	 * @param dy intager how much y moved.
+	 */
+	 public void translate(int dx, int dy){
+	 	this.boundingBox.translate(dx,dy);
+	 	
+	 }
+	
+	/**
 	 * Get the dragon associated with this object.
 	 * @return Dragon.
 	 */
