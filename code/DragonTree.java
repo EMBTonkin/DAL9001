@@ -40,6 +40,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Arrays;
 
 /**
  * DragonTree class, contains dragons and organizes them.  This is the Model of our Model View Controller.  I think.<br>
@@ -90,7 +91,7 @@ public class DragonTree{
 	*/
 	public DragonTree()
 	{
-		filename = "Untitled";
+		filename = "Untitled.drg";
 		
 		try
 		{
@@ -153,6 +154,53 @@ public class DragonTree{
 		
 		// System.out.println( "DragonTree.addDragon() : allDragonList.getLength() = " + allDragonList.length );  
 		
+		
+		// set the Dragon fields that could not be set earlier
+		// set mother and father fields (if the parents exist, of course)
+		// if there are parents, then use them to update ancestors
+		// also set Gen, which defaults to 1 (start at 0 since we add one to previous gen)
+		int[] gen= {0,0};
+		String[] parentIDs = newDragon.getParents();
+		for (i = 0; i < parentIDs.length; i++){
+			Dragon gotten = this.getDragonByID(parentIDs[i]);
+			if (gotten.getMatingType()){
+				newDragon.setMother(gotten);
+			}
+			else{
+				newDragon.setFather(gotten);
+			}
+			gen[i] = gotten.getGen();
+			
+			// add parent's ancestors to our own one gen up
+			
+			for (int j = 1; j < 5; j++){
+				String[] both = concatinate(gotten.getAncestors(j), newDragon.getAncestors(j+1));
+				newDragon.setAncestors(j+1, both);
+			}
+			
+			
+		}
+		newDragon.setGen(Math.max(gen[0]+1,gen[1]+1));
+		
+		// for all ancestors, add self as a child
+		String[] self = {newDragon.getID()};
+		// for all the levels
+		for (i = 1; i < 6; i++){
+			//get the ancestors of that level
+			String[] ansestors = newDragon.getAncestors(i);
+			for (int j = 0; j < ansestors.length; j++){
+				// for each of the ancestors add self as a descendant
+				Dragon ansestor = this.getDragonByID(ansestors[j]);
+				String[] both = concatinate(ansestor.getDescendants(i), self);
+				ansestor.setDescendants(i, both);
+			}
+		}
+		
+		// set default y based on the gen
+		newDragon.setY(newDragon.getGen()*100);
+		// set the default x based on number of dragons in that gen
+		newDragon.setX(getGeneration(newDragon.getGen()).size()*100);
+		// yes this is extremely broken but it's the best I can do right now -LT
 	}
 	
 	/**
@@ -162,13 +210,13 @@ public class DragonTree{
 	*/
 	public Dragon getDragonByID( String ID )
 	{
-		System.out.println( allDragonList.length + " dragons to search through." );
+		//System.out.println( allDragonList.length + " dragons to search through." );
 		
 		for( Dragon d : allDragonList )
 		{
-			System.out.println( "getDragonByID: param = '" + ID + "' ?= '" + d.getID() + "'" );
+			//System.out.println( "getDragonByID: param = '" + ID + "' ?= '" + d.getID() + "'" );
 			
-			if( d.getID() == ID )
+			if( d.getID().equals(ID) )
 				return d; // only one dragon can have a given ID, so no need to keep looking.
 		}
 		
@@ -276,6 +324,26 @@ public class DragonTree{
 	}
 	
 	
+	
+	/**
+	 * Because there is a lot of array concatenation in ancestor management, here's a function
+	 *
+	 * Code copied from http://stackoverflow.com/questions/80476/how-can-i-concatenate-two-arrays-in-java because I was lazy today
+	 *  
+	 * @param a a String[] to be concatenated with b
+	 * @param b a String[] to be concatenated with a
+	 * @return String[] concatenation of a and b
+	 */
+	public String[] concatinate(String[] a, String[] b){
+		int aLen = a.length;
+		int bLen = b.length;
+		String[] c= new String[aLen+bLen];
+		System.arraycopy(a, 0, c, 0, aLen);
+		System.arraycopy(b, 0, c, aLen, bLen);
+		return c;
+	}
+	
+	
 	/**
 	 * Handy dandy test function
 	 * 
@@ -340,15 +408,123 @@ public class DragonTree{
 		
 		
 		// write to test file 
-		lair.save( "empty.drg" );
+		lair.save( lair.filename );
 		System.out.println( "filename: '" + lair.filename + "'" );
 		
 		// read demo Lair
 		lair = new DragonTree("../demo.drg");
+		// verify filename has changed
+		System.out.println(lair.filename);
 		// write out to verify identical
 		lair.save("TEST.drg");
-		// also verify filename has changed
-		System.out.println(lair.filename);
+		
+		
+		// with the demo file, test adding a new gen 1 dragon
+		derg = new Dragon( lair.getDocument() );
+		derg.setName( "LizzieIsGreat" );
+		derg.setID( "7" );
+		derg.setMatingType( true );
+		lair.addDragon(derg);
+		
+		// verify that the mother is not a physical Dragon object
+		System.out.println("\nCheck that a mother dragon does not exist");
+		System.out.println(derg.getMother());
+		
+		// verify that the father is mpt a physical Dragon object
+		System.out.println("\nCheck that a father dragon does not exist");
+		System.out.println(derg.getFather());
+		
+		// check auto assigned gen
+		System.out.println("\nCheck Generation assignment (expect 1)");
+		System.out.println(derg.getGen());
+		
+		// check auto assigned x and y
+		System.out.println("\nCheck X and Y assignment (expect 400, 100)");
+		System.out.println(derg.getX()+", "+ derg.getY());
+		
+		// check ancestors
+		System.out.println("\nCheck Ancestor generations (expect [],,[],[],[],[] but not necessarily in order)");
+		for (int i = 1; i <6;i++){
+			System.out.println(Arrays.toString(derg.getAncestors(i)));
+		}
+		
+		
+		// add a second gen dragon, so we can test a third gen dragon from two second gen dragons
+		derg = new Dragon( lair.getDocument() );
+		String[] parentalUnits = {"7","5"};
+		derg.setParents(parentalUnits);
+		derg.setName( "SkySlammerIIisOK" );
+		derg.setID( "8" );
+		derg.setMatingType(false);
+		lair.addDragon(derg);
+		
+		// verify that the mother is a physical Dragon object
+		System.out.println("\nCheck that a mother dragon exists");
+		System.out.println(derg.getMother());
+		
+		// verify that the father is a physical Dragon object
+		System.out.println("\nCheck that a father dragon exists (and is different)");
+		System.out.println(derg.getFather());
+		
+		// check auto assigned gen
+		System.out.println("\nCheck Generation assignment (expect 2)");
+		System.out.println(derg.getGen());
+		
+		// check auto assigned x and y
+		System.out.println("\nCheck X and Y assignment (expect 300, 200)");
+		System.out.println(derg.getX()+", "+ derg.getY());
+		
+		// check ancestors
+		System.out.println("\nCheck Ancestor generations (expect [7,5],[],[],[],[] but not necessarily in order)");
+		for (int i = 1; i <6;i++){
+			System.out.println(Arrays.toString(derg.getAncestors(i)));
+		}
+		
+		
+		// with the demo file, test adding a new gen 3 dragon
+		derg = new Dragon( lair.getDocument() );
+		String[] parentalUnits2 = {"4","8"};
+		derg.setParents(parentalUnits2);
+		derg.setName( "HarryPotter" );
+		derg.setID( "9" );
+		lair.addDragon(derg);
+		
+		// verify that the mother is a physical Dragon object
+		System.out.println("\nCheck that a mother dragon exists");
+		System.out.println(derg.getMother());
+		
+		// verify that the father is a physical Dragon object
+		System.out.println("\nCheck that a father dragon exists (and is different)");
+		System.out.println(derg.getFather());
+		
+		// check auto assigned gen
+		System.out.println("\nCheck Generation assignment (expect 3)");
+		System.out.println(derg.getGen());
+		
+		// check auto assigned x and y
+		System.out.println("\nCheck X and Y assignment (expect 200, 300)");
+		System.out.println(derg.getX()+", "+ derg.getY());
+		
+		// check ancestors
+		System.out.println("\nCheck Ancestor generations (expect [4,8],[1,2,7,5],[],[],[] but not necessarily in order within the list)");
+		for (int i = 1; i <6;i++){
+			System.out.println(Arrays.toString(derg.getAncestors(i)));
+		}
+		
+		// spot check descendants
+		derg = lair.getDragonByID("1");
+		System.out.println("\nCheck Descendant generations of a first gen dragon (expect [3,4],[6,9],[],[],[] but not necessarily in order within the list)");
+		for (int i = 1; i <6;i++){
+			System.out.println(Arrays.toString(derg.getDescendants(i)));
+		}
+		
+		// spot check descendants
+		derg = lair.getDragonByID("3");
+		System.out.println("\nCheck Descendant generations of a second gen dragon (expect [6],[],[],[],[] but not necessarily in order within the list)");
+		for (int i = 1; i <6;i++){
+			System.out.println(Arrays.toString(derg.getDescendants(i)));
+		}
+		
 	}
 
 }
