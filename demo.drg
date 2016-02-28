@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?> 
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <drg>
   <Family>
   <title>Master Demo Group</title> 
@@ -7,7 +7,7 @@
     <Dragon>
       <id>1</id>
       <name>Scale</name>
-      <parents></parents> 
+      <parents/> 
       <children>
       	<int>3</int>
         <int>4</int>
@@ -38,27 +38,27 @@
         <image>../images/7410122.gif</image>
         <gen>1</gen>
         
-        <ancestors2></ancestors2>
-        <ancestors3></ancestors3>
-        <ancestors4></ancestors4>
-        <ancestors5></ancestors5>
+        <ancestors2/>
+        <ancestors3/>
+        <ancestors4/>
+        <ancestors5/>
         
         <descendants2>
           <int>6</int>
         </descendants2>
-        <descendants3></descendants3>
-        <descendants4></descendants4>
-        <descendants5></descendants5>
+        <descendants3/>
+        <descendants4/>
+        <descendants5/>
         
-        <xPos>0</xPos>
-        <yPos>0</yPos>
+        <xPos>100</xPos>
+        <yPos>100</yPos>
       </DAL9000>
     </Dragon>
   
   	<Dragon>
       <id>2</id>
       <name>Floof</name>
-      <parents></parents> 
+      <parents/> 
       <children>
       	<int>3</int>
         <int>4</int>
@@ -89,20 +89,20 @@
         <image>../images/7793603.gif</image>
         <gen>1</gen>
         
-        <ancestors2></ancestors2>
-        <ancestors3></ancestors3>
-        <ancestors4></ancestors4>
-        <ancestors5></ancestors5>
+        <ancestors2/>
+        <ancestors3/>
+        <ancestors4/>
+        <ancestors5/>
         
         <descendants2>
           <int>6</int>
         </descendants2>
-        <descendants3></descendants3>
-        <descendants4></descendants4>
-        <descendants5></descendants5>
+        <descendants3/>
+        <descendants4/>
+        <descendants5/>
         
-        <xPos>100</xPos>
-        <yPos>0</yPos>
+        <xPos>200</xPos>
+        <yPos>100</yPos>
       </DAL9000>
     </Dragon>
     
@@ -142,18 +142,18 @@
         <image>../images/7881402.gif</image>
         <gen>2</gen>
         
-        <ancestors2></ancestors2>
-        <ancestors3></ancestors3>
-        <ancestors4></ancestors4>
-        <ancestors5></ancestors5>
+        <ancestors2/>
+        <ancestors3/>
+        <ancestors4/>
+        <ancestors5/>
         
-        <descendants2></descendants2>
-        <descendants3></descendants3>
-        <descendants4></descendants4>
-        <descendants5></descendants5>
+        <descendants2/>
+        <descendants3/>
+        <descendants4/>
+        <descendants5/>
         
-        <xPos>0</xPos>
-        <yPos>100</yPos>
+        <xPos>100</xPos>
+        <yPos>200</yPos>
       </DAL9000>
     </Dragon>
     <Dragon>
@@ -163,7 +163,7 @@
       	<int>1</int>
       	<int>2</int>
       </parents> 
-      <children></children>
+      <children/>
       
       <hatchDay>10-05-2015</hatchDay>
       <exalted>False</exalted>
@@ -190,24 +190,24 @@
         <image>../images/7881403.gif</image>
         <gen>2</gen>
         
-        <ancestors2></ancestors2>
-        <ancestors3></ancestors3>
-        <ancestors4></ancestors4>
-        <ancestors5></ancestors5>
+        <ancestors2/>
+        <ancestors3/>
+        <ancestors4/>
+        <ancestors5/>
         
-        <descendants2></descendants2>
-        <descendants3></descendants3>
-        <descendants4></descendants4>
-        <descendants5></descendants5>
+        <descendants2/>
+        <descendants3/>
+        <descendants4/>
+        <descendants5/>
         
-        <xPos>100</xPos>
-        <yPos>100</yPos>
+        <xPos>200</xPos>
+        <yPos>200</yPos>
       </DAL9000>
     </Dragon>
     <Dragon>
       <id>5</id>
       <name>Purplum</name>
-      <parents></parents> 
+      <parents/> 
       <children>
       	<int>6</int>
       </children>
@@ -238,18 +238,18 @@
         <image>../images/7945090.gif</image>
         <gen>1</gen>
         
-        <ancestors2></ancestors2>
-        <ancestors3></ancestors3>
-        <ancestors4></ancestors4>
-        <ancestors5></ancestors5>
+        <ancestors2/>
+        <ancestors3/>
+        <ancestors4/>
+        <ancestors5/>
         
-        <descendants2></descendants2>
-        <descendants3></descendants3>
-        <descendants4></descendants4>
-        <descendants5></descendants5>
+        <descendants2/>
+        <descendants3/>
+        <descendants4/>
+        <descendants5/>
         
-        <xPos>200</xPos>
-        <yPos>0</yPos>
+        <xPos>300</xPos>
+        <yPos>100</yPos>
       </DAL9000>
     </Dragon>
     <Dragon>
@@ -259,7 +259,7 @@
       	<int>3</int>
       	<int>5</int>
       </parents> 
-      <children></children>
+      <children/>
       
       <hatchDay>10-05-2015</hatchDay>
       <exalted>False</exalted>
@@ -291,17 +291,17 @@
           <int>1</int>
           <int>2</int>
         </ancestors2>
-        <ancestors3></ancestors3>
-        <ancestors4></ancestors4>
-        <ancestors5></ancestors5>
+        <ancestors3/>
+        <ancestors4/>
+        <ancestors5/>
         
-        <descendants2></descendants2>
-        <descendants3></descendants3>
-        <descendants4></descendants4>
-        <descendants5></descendants5>
+        <descendants2/>
+        <descendants3/>
+        <descendants4/>
+        <descendants5/>
         
-        <xPos>0</xPos>
-        <yPos>200</yPos>
+        <xPos>100</xPos>
+        <yPos>300</yPos>
       </DAL9000>
     </Dragon>
   </Family>
