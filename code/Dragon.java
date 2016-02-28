@@ -53,6 +53,9 @@ public class Dragon{
 	
 	private Element us; // Us, that is this dragon.  The XML node
 	private DragonDisplay displayStuff; // the image objects and other things
+	private Dragon mother; // reference to mother and father dragons because display reasons
+	private Dragon father; // reference to mother and father dragons because display reasons
+	private int mark; // a integer for making and sweeping operations, ancestor hi lighting?
 	
 	// constructor for when there is already an XML object with the proper values
 	public Dragon(Node aDragon) {
@@ -62,6 +65,13 @@ public class Dragon{
 		// create, then add the Dragon Display object.
 		DragonDisplay placeholder = new DragonDisplay(this);
 		this.displayStuff = placeholder;
+		
+		// these fields will be set by the DragonDisplay
+		this.mother = null;
+		this.father = null;
+		
+		// initialize the mark at 0
+		this.mark = 0;
 	}
 
 	/**
@@ -206,6 +216,9 @@ public class Dragon{
 	}
 	
 	
+	
+	// get and sets for object fields
+	
 	/**
 	 * Get the Node of this dragon
 	 * 
@@ -225,6 +238,67 @@ public class Dragon{
 		return this.displayStuff;	
 	}
 	
+	
+	/**
+	 * Get the mother Dragon of this dragon
+	 * 
+	 * @return the Dragon object of the mother
+	 */
+	public Dragon getMother(){
+		return this.mother;	
+	}
+	
+	/**
+	 * Set the mother Dragon of this dragon
+	 * 
+	 * @param the Dragon object of the mother
+	 */
+	public void setMother(Dragon newParent){
+		this.mother = newParent;	
+	}
+	
+	
+	/**
+	 * Get the father Dragon of this dragon
+	 * 
+	 * @return the Dragon object of the father
+	 */
+	public Dragon getFather(){
+		return this.father;	
+	}
+	
+	/**
+	 * Set the father Dragon of this dragon
+	 * 
+	 * @param the Dragon object of the father
+	 */
+	public void setFather(Dragon newParent){
+		this.father = newParent;	
+	}
+	
+	
+	/**
+	 * Get the current value of the mark;
+	 * @return int the mark value (I'll assign these meaning later when I decide what they mean -LT)
+	 */
+	public int getMark(){
+		return this.mark;
+	}
+	
+	/**
+	 * Set the current value of the mark;
+	 * @param marker int the new mark value
+	 */
+	public void setMark(int marker){
+		this.mark = marker;
+	}
+	
+	
+	
+	
+	
+	
+	// get and sets for node fields
 	
 	/**
 	 * Get the ID of this dragon
@@ -721,6 +795,10 @@ public class Dragon{
 		Element eElement = (Element) us.getElementsByTagName("DAL9000").item(0);
 		eElement.getElementsByTagName("yPos").item(0).setTextContent( Integer.toString(y));
 	}
+	
+	
+	
+	
 	
 	
 	
