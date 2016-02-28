@@ -60,6 +60,7 @@ class DragonDisplay{
 				// OK, now we really have a problem
 				System.out.println("Invalid image: coul not find placeholder image\nABANDON SHIP\n");
 				System.out.println(ee);
+				return;
 			}
 		}
 		//need to add 150 to Y because the rectangle counts the header as part of the grid.  Odd.
