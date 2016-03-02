@@ -60,7 +60,7 @@ public class Analysis{
     	// a string[] of all breed and gene names
 		String[] names = {"Fae","Guardian","Mirror","Pearlcatcher","Ridgeback","Tundra","Spiral","Imperial","Snapper","Wildclaw","Nocturne","Coatl","Skydancer", 
 				"Basic","Iridescent","Tiger","Clown","Speckle","Ripple","Bar","Crystal","Vipera","Piebald","Cherub", "Poison",
-				"Shimmer","Stripes","Eye-Spots","Freckle","Seraph","Current","Daub","Facet","Hypnotic","Paint","Peregrine", "Toxin","Butterfly",
+				"Shimmer","Stripes","Eye Spots","Freckle","Seraph","Current","Daub","Facet","Hypnotic","Paint","Peregrine", "Toxin","Butterfly",
 				"Circuit","Gembond","Underbelly","Crackle","Smoke","Spines","Okapi","Glimmer","Thylacine","Stained"};
 		// the relative rarities of the previous stuff, in the same order.  
 		int[] values ={0,0,0,1,1,0,1,3,1,4,3,4,2, 

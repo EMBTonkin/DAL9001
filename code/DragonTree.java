@@ -56,6 +56,8 @@ public class DragonTree{
 		/*** ^^^^ 1) why do we need to cache tree.getElementsByTagName("Dragon") ?
 		          2) and if we do, why not just keep it as a NodeList? 
 		          -SS2
+		          
+		          1) this is a list of Dragon Objects, not a list of Nodes -LT
 		*/
 	
 	// constructor for a family tree with an existing document
@@ -136,23 +138,6 @@ public class DragonTree{
 	*/
 	public void addDragon( Dragon newDragon )
 	{	
-		// add newDragon's Node into the "Family" Element
-		Node newNode = newDragon.getNode();
-		tree.adoptNode( newNode );
-		tree.getElementsByTagName("Family").item(0).appendChild( newNode ); // only a single Family tag thus far in the XML spec
-		
-		// soon to be list of our dragon objects
-		Dragon[] newDragonList = new Dragon[allDragonList.length + 1];
-		int i = 0;  // need this index to stick around after the loop
-		for (; i < allDragonList.length; i++) 
-		{
-			newDragonList[i]= allDragonList[i];
-		}
-		newDragonList[i] = newDragon;
-		
-		allDragonList = newDragonList;
-		
-		// System.out.println( "DragonTree.addDragon() : allDragonList.getLength() = " + allDragonList.length );  
 		
 		
 		// set the Dragon fields that could not be set earlier
@@ -161,7 +146,7 @@ public class DragonTree{
 		// also set Gen, which defaults to 1 (start at 0 since we add one to previous gen)
 		int[] gen= {0,0};
 		String[] parentIDs = newDragon.getParents();
-		for (i = 0; i < parentIDs.length; i++){
+		for (int i = 0; i < parentIDs.length; i++){
 			Dragon gotten = this.getDragonByID(parentIDs[i]);
 			if (gotten.getMatingType()){
 				newDragon.setMother(gotten);
@@ -185,7 +170,7 @@ public class DragonTree{
 		// for all ancestors, add self as a child
 		String[] self = {newDragon.getID()};
 		// for all the levels
-		for (i = 1; i < 6; i++){
+		for (int i = 1; i < 6; i++){
 			//get the ancestors of that level
 			String[] ansestors = newDragon.getAncestors(i);
 			for (int j = 0; j < ansestors.length; j++){
@@ -199,9 +184,64 @@ public class DragonTree{
 		// set default y based on the gen
 		newDragon.setY(newDragon.getGen()*100);
 		// set the default x based on number of dragons in that gen
-		newDragon.setX(getGeneration(newDragon.getGen()).size()*100);
+		newDragon.setX(getGeneration(newDragon.getGen()).size()*100+100);
 		// yes this is extremely broken but it's the best I can do right now -LT
+		// have to re-do the display stuff with the new x and y
+		DragonDisplay placeholder = new DragonDisplay(newDragon);
+		newDragon.setDragonDisplay(placeholder);
+		
+		
+		// something is wrong somewhere
+		// The dragon object living in the list of dragon objects gets disconnected from the node in the XML structure
+		// This means that moving the dragon around on screen works, but when you save the new position is not saved
+		// this would have drastic ramifications once we add the edit button in.
+		// I need to come back and fix this, and I will, but I have a job interview where I 
+		// plan on presenting this so I am trying to get the basic algorithm working for that.
+		// Then I will make this less extremely bad -LT
+		// PS future employers if you find this please forgive me and it's not SSII's fault.
+		/*
+		// soon to be list of our dragon objects
+		Dragon[] newDragonList = new Dragon[allDragonList.length + 1];
+		int i = 0;  // need this index to stick around after the loop
+		for (; i < allDragonList.length; i++) 
+		{
+			newDragonList[i]= allDragonList[i];
+		}
+		newDragonList[i] = newDragon;
+		
+		allDragonList = newDragonList;
+		*/
+		
+		// System.out.println( "DragonTree.addDragon() : allDragonList.getLength() = " + allDragonList.length );  
+			
+			
+		// add newDragon's Node into the "Family" Element
+		Node newNode = newDragon.getNode();
+		tree.adoptNode( newNode );
+		tree.getElementsByTagName("Family").item(0).appendChild( newNode ); // only a single Family tag thus far in the XML spec
+		
+		
+		// Re-create all the dragon objects because something is wrong somewhere (see above)
+		NodeList nList = tree.getElementsByTagName("Dragon");
+		allDragonList = new Dragon[nList.getLength()];
+		for (int i = 0; i < nList.getLength(); i++) {
+			allDragonList[i]= new Dragon(nList.item(i));
+		}
+		
+		
 	}
+	
+	
+	
+	/**
+	 * Get ALL the dragons 
+	 * I can't believe I forgot we needed this one
+	 * @return list of ALL the Dragons
+	 */
+	public Dragon[] getAllDragons(){
+		return allDragonList;
+	}
+	
 	
 	/**
 		@author StrykeSlammerII

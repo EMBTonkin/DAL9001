@@ -187,8 +187,6 @@ public class Dragon{
 		us.appendChild( dal );		
 		// System.out.println( us + ", size: " + us.getElementsByTagName("*").getLength() );
 		
-		doc.getDocumentElement().appendChild( us ); // can't append an Element to a document (??) -SS2
-		
 		// System.out.println( doc + ", size: " + doc.getElementsByTagName("*").getLength() );
 		
 		
@@ -213,6 +211,13 @@ public class Dragon{
 		// create, then add the Dragon Display object.
 		DragonDisplay placeholder = new DragonDisplay(this);
 		this.displayStuff = placeholder;
+		
+		// these fields will be set by the DragonDisplay
+		this.mother = null;
+		this.father = null;
+		
+		// initialize the mark at 0
+		this.mark = 0;
 	}
 	
 	
@@ -236,6 +241,15 @@ public class Dragon{
 	 */
 	public DragonDisplay getDragonDisplay(){
 		return this.displayStuff;	
+	}
+	
+	/**
+	 * Set the DragonDisplay of this dragon
+	 * 
+	 * @param stuff DragonDisplay object, which has stuff.
+	 */
+	public void setDragonDisplay(DragonDisplay stuff){
+		this.displayStuff = stuff;	
 	}
 	
 	
@@ -294,11 +308,23 @@ public class Dragon{
 	}
 	
 	
+	/**
+	 * To string method for these objects
+	 * @return the dragon's name
+	 */
+	public String toString(){
+		return this.getName();
+	}
 	
-	
+
+
+
 	
 	
 	// get and sets for node fields
+	
+	
+	
 	
 	/**
 	 * Get the ID of this dragon

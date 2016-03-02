@@ -13,7 +13,7 @@
 // *************** Stuff to do ***************
 // *******************************************
 //Every dragon needs an image, (check)
-//bounding box (test for clicks in box, also the outline)
+//bounding box (test for clicks in box, also the outline) (check)
 //two lines, pointing to parents
 //some sort of pointer back to owner dragon (check)
 //who knows what else
