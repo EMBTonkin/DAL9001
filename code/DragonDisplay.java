@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.awt.Rectangle;
+import java.awt.geom.Line2D.Float;
 
 
 
@@ -32,9 +33,11 @@ import java.awt.Rectangle;
  */
 class DragonDisplay{		
 	
-	private Dragon ourDragon;
-	private BufferedImage image;
-	private Rectangle boundingBox;
+	private Dragon ourDragon; // reference back to the Dragon that owns this
+	private BufferedImage image; // lovely image
+	private Rectangle boundingBox; // Same size as image, used for outline, size, and click calculations
+	private int[] motherLine;  // coordinates for connecting line to mother.
+	private int[] fatherLine;  // coordinates for connecting line to mother.
 	
 	/**
 	 * Create the display objects bassed off of the Dragon's data, and store, but do not display them.
@@ -66,6 +69,39 @@ class DragonDisplay{
 		//need to add 150 to Y because the rectangle counts the header as part of the grid.  Odd.
 		boundingBox = new Rectangle(ourDragon.getX(),ourDragon.getY()+150,image.getWidth(), image.getHeight()); 
 		
+		// if we have no mother, the line will just be a dot
+		if (ourDragon.getMother()==null){
+			motherLine = new int[4];
+			motherLine[0] = ourDragon.getX();
+			motherLine[1] = ourDragon.getY();
+			motherLine[2] = ourDragon.getX();
+			motherLine[3] = ourDragon.getY();
+		}
+		// if we have a mother, the line go from our upper left corner to her bottom middle
+		else{
+			motherLine = new int[4];
+			motherLine[0] = ourDragon.getX();
+			motherLine[1] = ourDragon.getY();
+			motherLine[2] = (int) (ourDragon.getMother().getX()+boundingBox.getWidth()/2 );
+			motherLine[3] = (int) (ourDragon.getMother().getY()+boundingBox.getHeight());
+		}
+		// if we have no father, the line will just be a dot
+		if (ourDragon.getFather()==null){
+			fatherLine = new int[4];
+			fatherLine[0] = ourDragon.getX();
+			fatherLine[1] = ourDragon.getY();
+			fatherLine[2] = ourDragon.getX();
+			fatherLine[3] = ourDragon.getY();
+		}
+		// if we have a father, the line go from our upper right corner to his bottom middle
+		else{
+			fatherLine = new int[4];
+			fatherLine[0] = (int) (ourDragon.getX()+boundingBox.getWidth());
+			fatherLine[1] = ourDragon.getY();
+			fatherLine[2] = (int) (ourDragon.getFather().getX()+boundingBox.getWidth()/2 );
+			fatherLine[3] = (int) (ourDragon.getFather().getY()+boundingBox.getHeight());
+		}
+		
 	}	
 	
 	/**
@@ -75,6 +111,14 @@ class DragonDisplay{
 	 */
 	 public void translate(int dx, int dy){
 	 	this.boundingBox.translate(dx,dy);
+	 	motherLine[0] = motherLine[0] + dx;
+	 	motherLine[1] = motherLine[1] + dy;
+	 	motherLine[2] = motherLine[2] + dx;
+	 	motherLine[3] = motherLine[3] + dy;
+	 	fatherLine[0] = fatherLine[0] + dx;
+	 	fatherLine[1] = fatherLine[1] + dy;
+	 	fatherLine[2] = fatherLine[2] + dx;
+	 	fatherLine[3] = fatherLine[3] + dy;
 	 	
 	 }
 	
@@ -102,6 +146,21 @@ class DragonDisplay{
 		return this.boundingBox;
 	}
 	
+	/**
+	 * Get the points defining the line leading to the mother
+	 * @return int[], where it's [ourX, ourY, herX, herY]
+	 */
+	public int[] getMotherLine(){
+		return this.motherLine;
+	}
+	
+	/**
+	 * Get the points defining the line leading to the father
+	 * @return int[], where it's [ourX, ourY, hisX, hisY]
+	 */
+	public int[] getFatherLine(){
+		return this.fatherLine;
+	}
 	
 	
 // Since this is so closely related to UI, once again, no test function besides just running the program and seeing what happens.	

@@ -124,7 +124,11 @@ class Display extends JPanel{
 				Dragon current = iterator.next();
 				g.drawImage(current.getDragonDisplay().getImage(), current.getX(), current.getY(), null);
 				g.drawRect(current.getX(), current.getY(), (int) current.getDragonDisplay().getBoundingBox().getWidth(), (int) current.getDragonDisplay().getBoundingBox().getHeight());
-
+				// draw lines
+				int[] coords = current.getDragonDisplay().getMotherLine();
+				g.drawLine(coords[0],coords[1],coords[2],coords[3]);
+				coords = current.getDragonDisplay().getFatherLine();
+				g.drawLine(coords[0],coords[1],coords[2],coords[3]);
 			}
 			
 			// if there is an active dragon draw a green frame around it.
