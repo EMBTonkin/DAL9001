@@ -79,6 +79,21 @@ public class DragonTree{
 		allDragonList = new Dragon[nList.getLength()];
 		for (int i = 0; i < nList.getLength(); i++) {
 			allDragonList[i]= new Dragon(nList.item(i));
+			// add parent Dragon to the Dragon
+			String[] parentIDs = allDragonList[i].getParents();
+			for (int j = 0; j < parentIDs.length; j++){
+				Dragon gotten = this.getDragonByID(parentIDs[j]);
+				if (gotten.getMatingType()){
+					allDragonList[i].setMother(gotten);
+				}
+				else{
+					allDragonList[i].setFather(gotten);
+				}
+			}
+			//create display stuff now we have parents attached
+			DragonDisplay placeholder = new DragonDisplay(allDragonList[i]);
+			allDragonList[i].setDragonDisplay(placeholder);
+			
 		}
 		
 		// being lazy with the exceptions
@@ -138,32 +153,18 @@ public class DragonTree{
 	*/
 	public void addDragon( Dragon newDragon )
 	{	
-		
-		
-		// set the Dragon fields that could not be set earlier
-		// set mother and father fields (if the parents exist, of course)
 		// if there are parents, then use them to update ancestors
 		// also set Gen, which defaults to 1 (start at 0 since we add one to previous gen)
 		int[] gen= {0,0};
 		String[] parentIDs = newDragon.getParents();
 		for (int i = 0; i < parentIDs.length; i++){
 			Dragon gotten = this.getDragonByID(parentIDs[i]);
-			if (gotten.getMatingType()){
-				newDragon.setMother(gotten);
-			}
-			else{
-				newDragon.setFather(gotten);
-			}
 			gen[i] = gotten.getGen();
-			
 			// add parent's ancestors to our own one gen up
-			
 			for (int j = 1; j < 5; j++){
 				String[] both = concatinate(gotten.getAncestors(j), newDragon.getAncestors(j+1));
 				newDragon.setAncestors(j+1, both);
 			}
-			
-			
 		}
 		newDragon.setGen(Math.max(gen[0]+1,gen[1]+1));
 		
@@ -186,10 +187,7 @@ public class DragonTree{
 		// set the default x based on number of dragons in that gen
 		newDragon.setX(getGeneration(newDragon.getGen()).size()*100+100);
 		// yes this is extremely broken but it's the best I can do right now -LT
-		// have to re-do the display stuff with the new x and y
-		DragonDisplay placeholder = new DragonDisplay(newDragon);
-		newDragon.setDragonDisplay(placeholder);
-		
+
 		
 		// something is wrong somewhere
 		// The dragon object living in the list of dragon objects gets disconnected from the node in the XML structure
@@ -226,11 +224,22 @@ public class DragonTree{
 		allDragonList = new Dragon[nList.getLength()];
 		for (int i = 0; i < nList.getLength(); i++) {
 			allDragonList[i]= new Dragon(nList.item(i));
+			// add parent Dragon to the Dragon
+			parentIDs = allDragonList[i].getParents();
+			for (int j = 0; j < parentIDs.length; j++){
+				Dragon gotten = this.getDragonByID(parentIDs[j]);
+				if (gotten.getMatingType()){
+					allDragonList[i].setMother(gotten);
+				}
+				else{
+					allDragonList[i].setFather(gotten);
+				}
+			}
+			//create display stuff now we have parents attached
+			DragonDisplay placeholder = new DragonDisplay(allDragonList[i]);
+			allDragonList[i].setDragonDisplay(placeholder);
 		}
-		
-		
 	}
-	
 	
 	
 	/**
