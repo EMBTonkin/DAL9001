@@ -65,7 +65,7 @@ class Display extends JPanel{
 	 */
 	public void update(HashSet<Dragon> dragons) {
 		Graphics g = panel.getGraphics();
-		panel.paintComponent( g, dragons );
+		panel.paintGrid( g, dragons );
 		this.requestFocus();
 	}
 	
@@ -78,7 +78,18 @@ class Display extends JPanel{
 	public void setActiveDragon(Dragon toBeActive){
 		Graphics g = header.getGraphics();
 		this.active = toBeActive;
-		this.header.paintComponent(g,this.active);
+		this.header.paintActive(g,this.active);
+	}
+	
+	
+	/**
+	 * Display various comparison results
+	 * 
+	 * @param toBeActive either the Dragon object becoming active, or null signifying remove active dragon.
+	 */
+	public void compareDragon(Dragon activeDrag, Dragon hoverDrag){
+		Graphics g = header.getGraphics();
+		this.header.paintCompare(g,activeDrag,hoverDrag);
 	}
 	
 	
@@ -103,7 +114,7 @@ class Display extends JPanel{
 		 * @param g		the Graphics object used for drawing
 		 * @param dragons a HashSet of dragons currently being displayed
 		 */
-		public void paintComponent(Graphics g, HashSet<Dragon> dragons){
+		public void paintGrid(Graphics g, HashSet<Dragon> dragons){
 			super.paintComponent(g);
 			// create an iterator
 			Iterator<Dragon> iterator = dragons.iterator(); 
@@ -162,15 +173,18 @@ class Display extends JPanel{
 
 
 		/**
-		 * Method overridden from JComponent that is responsible for
-		 * drawing components on the screen.  The supplied Graphics
-		 * object is used to draw.
+		 * Sets the header panel with info about the now active dragon, or clears the panel
 		 * 
 		 * @param g		the Graphics object used for drawing
 		 * @param toBeActive either the Dragon object becoming active, or null signifying remove active dragon.	
 		 */
-		public void paintComponent(Graphics g, Dragon active){
+		public void paintActive(Graphics g, Dragon active){
 			super.paintComponent(g);
+			
+			// set up font flavor
+			g.setFont(new Font("Arial", Font.PLAIN, 14)); 
+			g.setColor(Color.black);
+			
 			// if nothing is active, clear space by doing nothing
 			if (active == null){
 				this.scroll.setVisible(false);
@@ -186,8 +200,6 @@ class Display extends JPanel{
 			int base = Math.max(winner,widthBirthday);
 			
 			// write the info to left of dragon
-			g.setFont(new Font("Arial", Font.PLAIN, 14)); 
-			g.setColor(Color.black);
 			g.drawString(active.getName(), 35, 45);
 			g.drawString(active.getID(), 35, 65);
 			g.drawString(active.getHatchDay(), 35, 85);
@@ -232,6 +244,112 @@ class Display extends JPanel{
 			this.scroll.setVisible(true);
 			this.scroll.updateUI();
    			this.text.setText(active.getComment());
+   		}
+   		
+   		
+   		
+   		
+   		/**
+		 * Method updates the header panel with the comparison result of two dragons
+		 * 
+		 * @param g		the Graphics object used for drawing
+		 * @param active the active dragon
+		 * @param hover the dragon we are comparing the active dragon with
+		 */
+		public void paintCompare(Graphics g, Dragon active, Dragon hover){
+			super.paintComponent(g);
+			// set up font flavor
+			g.setFont(new Font("Arial", Font.PLAIN, 14)); 
+			g.setColor(Color.black);
+			
+			// make sure have opposite mating types
+			if (active.getMatingType()==hover.getMatingType()){
+				g.drawString("Incompatible Mating Types :(", 35, 45);
+				return;
+			}
+			
+			// find if name, ID, or hatchday is longer, set longer as base length
+			int widthName = g.getFontMetrics().stringWidth(active.getName());
+			int widthID = g.getFontMetrics().stringWidth(active.getID());
+			int widthBirthday = g.getFontMetrics().stringWidth(active.getHatchDay());
+			int winner = Math.max(widthName, widthID);
+			int base = Math.max(winner,widthBirthday);
+			
+			// write the info to left of dragon
+			g.drawString(active.getName(), 35, 45);
+			g.drawString(active.getID(), 35, 65);
+			g.drawString(active.getHatchDay(), 35, 85);
+			
+			// Add image of the dragon
+			g.drawImage(active.getDragonDisplay().getImage(), base+45, 35, null);
+			g.drawRect(base+45,35,75,75);
+			
+			// get the rarity comparison results for genes and species
+			String species = analysis.rarityCompare(active.getSpecies(),hover.getSpecies());
+			String gene1 = analysis.rarityCompare(active.getGene(1),hover.getGene(1));
+			String gene2 = analysis.rarityCompare(active.getGene(2),hover.getGene(2));
+			String gene3 = analysis.rarityCompare(active.getGene(3),hover.getGene(3));
+			
+			// write active dragon's genes and percent chance of offspring getting genes
+			g.drawString(active.getSpecies()+" "+species.split("/")[0]+"%", base+130, 45);
+			g.drawString(active.getGene(1)+" "+gene1.split("/")[0]+"%", base+130, 65);
+			g.drawString(active.getGene(2)+" "+gene2.split("/")[0]+"%", base+130, 85);
+			g.drawString(active.getGene(3)+" "+gene3.split("/")[0]+"%", base+130, 105);
+			
+			// find which was longest
+			int width1 =  g.getFontMetrics().stringWidth(active.getSpecies()+" "+species.split("/")[0]+"%");
+			int width2 =  g.getFontMetrics().stringWidth(active.getGene(1)+" "+gene1.split("/")[0]+"%");
+			int width3 =  g.getFontMetrics().stringWidth(active.getGene(2)+" "+gene2.split("/")[0]+"%");
+			int width4 =  g.getFontMetrics().stringWidth(active.getGene(3)+" "+gene3.split("/")[0]+"%");
+			int winner1 = Math.max(width1, width2);
+			int winner2 = Math.max(width3, width4);
+			base += Math.max(winner1,winner2);
+			
+			// for the three layers of color, find the possibilities and display them
+			int[] numColors = {0,0,0};
+			for (int i = 0; i < 3; i++){
+				String[] range = analysis.getColorRange(active.getColor(i+1), hover.getColor(i+1));
+				numColors[i]=range.length;
+				for (int j = 0; j < range.length; j++){
+					g.setColor(Color.decode(analysis.getColorHex(range[j])));
+					g.fillRect(base+140+j*10,52+i*20,10,15);
+					// outlines
+					//g.setColor(Color.black);
+					//g.drawRect(base+140+j*10,52+i*20,10,15);
+				}
+			}
+			
+			// find out which color was longest
+			winner1 = Math.max(numColors[0], numColors[1]);
+			base+= Math.max(numColors[2], winner1)*10;
+			
+			//reset color
+			g.setColor(Color.black);
+			
+			// write hover dragon's genes and percent chance of offspring getting genes
+			g.drawString(hover.getSpecies()+" "+species.split("/")[1]+"%", base+150, 45);
+			g.drawString(hover.getGene(1)+" "+gene1.split("/")[1]+"%", base+150, 65);
+			g.drawString(hover.getGene(2)+" "+gene2.split("/")[1]+"%", base+150, 85);
+			g.drawString(hover.getGene(3)+" "+gene3.split("/")[1]+"%", base+150, 105);
+			
+			// find which was longest
+			width1 =  g.getFontMetrics().stringWidth(hover.getSpecies()+" "+species.split("/")[1]+"%");
+			width2 =  g.getFontMetrics().stringWidth(hover.getGene(1)+" "+gene1.split("/")[1]+"%");
+			width3 =  g.getFontMetrics().stringWidth(hover.getGene(2)+" "+gene2.split("/")[1]+"%");
+			width4 =  g.getFontMetrics().stringWidth(hover.getGene(3)+" "+gene3.split("/")[1]+"%");
+			winner1 = Math.max(width1, width2);
+			winner2 = Math.max(width3, width4);
+			base += Math.max(winner1,winner2);
+			
+			// draw image of hover dragon
+			g.drawImage(hover.getDragonDisplay().getImage(), base+160, 35, null);
+			g.drawRect(base+160,35,75,75);
+			
+			// draw basic info of hover dragon
+			g.drawString(hover.getName(), base+245, 45);
+			g.drawString(hover.getID(), base+245, 65);
+			g.drawString(hover.getHatchDay(), base+245, 85);
+				
    		}
 		
 		

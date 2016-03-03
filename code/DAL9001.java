@@ -574,6 +574,33 @@ public class DAL9001 extends JFrame{
 			canvas.update(dragons);
 		}
 		
+		// calculations for comparison of two dragons
+		public void mouseMoved(MouseEvent e) {
+			if (activeDragon != null){
+				// find if we are hovering over anything, and if so what
+				Dragon hoverDragon = null;
+				HashSet<Dragon> dragons = (HashSet<Dragon>) tree.getDragonsByExalted(false);
+				// create an iterator
+				Iterator<Dragon> iterator = dragons.iterator(); 
+				// check to see if hover was within any bounding boxes
+				while (iterator.hasNext()){
+					Dragon current = iterator.next();
+					if (current.getDragonDisplay().getBoundingBox().contains(e.getX(),e.getY())){
+						// If the hover was in a box, set the hover dragon variable to that Dragon 
+						hoverDragon = current;
+					}
+				}
+				// if hovering over something and it's not the active one than us, analyze match
+				if ((hoverDragon != null) && (!hoverDragon.getID().equals(activeDragon.getID()))){
+					canvas.compareDragon(activeDragon,hoverDragon);
+				} 
+				// If hovering over nothing reset to normal active dragon display
+				else{
+					canvas.setActiveDragon(activeDragon);
+				}
+			}
+		}
+		
 		// get the starting point for dragging
 		public void mousePressed(MouseEvent e) {
 			baseX = e.getX();
