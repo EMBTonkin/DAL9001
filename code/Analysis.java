@@ -145,7 +145,7 @@ public class Analysis{
 	public String rarityCompare(String gene1, String gene2) {
 		// test to see if the two genes are the same
 		if (gene1.equals(gene2)){
-			return "100";
+			return "100/100";
 		}
 		// get the relative rarity of the two genes in question
 		int value1 = geneRarities.get(gene1);
@@ -246,7 +246,7 @@ public class Analysis{
 		String[] output;
 		if( range > ( ColorIndex.size() + 1 )/2 )
 		{
-			output = new String[ index1 + ( ColorIndex.size() + 1 - index2 ) + 1 ]; 
+			output = new String[ index1 + ( ColorIndex.size() + 1 - index2 ) ]; 
 			
 			int firstIndex = 0;
 			while( ( output[ firstIndex ] = getColorName( index2 + firstIndex ) ) != null )
@@ -350,6 +350,35 @@ public class Analysis{
 		printable += "}";
 		System.out.println( printable );
 		
+		
+		colors = module.getColorRange( "Red", "Caribbean" );
+		printable = "\nRange( Red, Caribbean ) = { ";
+		for( String s : colors )
+		{
+			printable += s + ", ";
+		}
+		printable += "}";
+		System.out.println( printable );
+		
+		colors = module.getColorRange( "Red", "Teal" );
+		printable = "\nRange( Red, Teal ) = { ";
+		for( String s : colors )
+		{
+			printable += s + ", ";
+		}
+		printable += "}";
+		System.out.println( printable );
+		
+		colors = module.getColorRange( "Red", "Aqua" );
+		printable = "\nRange( Red, Aqua ) = { ";
+		for( String s : colors )
+		{
+			printable += s + ", ";
+		}
+		printable += "}";
+		System.out.println( printable );
+		
+		
 		colors = module.getColorRange( "Bob", "Bob" );
 		printable = "Range( Bob, Bob ) = " + colors;
 		System.out.println( printable );
@@ -362,7 +391,7 @@ public class Analysis{
 		printable = "Range( Teal, Bob ) = " + colors;
 		System.out.println( printable );
 		
-		// Test a few genes on the rarity comparer.  Expected output is 3/97, 1/99, 50/50, 100
+		// Test a few genes on the rarity comparer.  Expected output is 3/97, 1/99, 50/50, 100/100
 		String output = module.rarityCompare("Glimmer","Spines");
 		System.out.println(output);
 		output = module.rarityCompare("Glimmer","Underbelly");
@@ -371,6 +400,10 @@ public class Analysis{
 		System.out.println(output);
 		output = module.rarityCompare("Glimmer","Glimmer");
 		System.out.println(output);
+		
+		
+		
+		
 	}
 	
 }
