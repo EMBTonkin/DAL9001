@@ -24,7 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.awt.Rectangle;
-import java.awt.geom.Line2D.Float;
 
 
 
@@ -68,10 +67,19 @@ class DragonDisplay{
 		}
 		//need to add 150 to Y because the rectangle counts the header as part of the grid.  Odd.
 		boundingBox = new Rectangle(ourDragon.getX(),ourDragon.getY()+150,image.getWidth(), image.getHeight()); 
-		
+		// initialize lines
+		motherLine = new int[4];
+		fatherLine = new int[4];
+		this.updateLines();
+	}	
+	
+	/**
+	 * Updates the lines connecting this dragon to parents.
+	 * Use when us or the parents (or both) has moved to a location
+	 */
+	public void updateLines(){
 		// if we have no mother, the line will just be a dot
 		if (ourDragon.getMother()==null){
-			motherLine = new int[4];
 			motherLine[0] = ourDragon.getX();
 			motherLine[1] = ourDragon.getY();
 			motherLine[2] = ourDragon.getX();
@@ -79,7 +87,6 @@ class DragonDisplay{
 		}
 		// if we have a mother, the line go from our upper left corner to her bottom middle
 		else{
-			motherLine = new int[4];
 			motherLine[0] = ourDragon.getX();
 			motherLine[1] = ourDragon.getY();
 			motherLine[2] = (int) (ourDragon.getMother().getX()+boundingBox.getWidth()/2 );
@@ -87,7 +94,6 @@ class DragonDisplay{
 		}
 		// if we have no father, the line will just be a dot
 		if (ourDragon.getFather()==null){
-			fatherLine = new int[4];
 			fatherLine[0] = ourDragon.getX();
 			fatherLine[1] = ourDragon.getY();
 			fatherLine[2] = ourDragon.getX();
@@ -95,32 +101,29 @@ class DragonDisplay{
 		}
 		// if we have a father, the line go from our upper right corner to his bottom middle
 		else{
-			fatherLine = new int[4];
 			fatherLine[0] = (int) (ourDragon.getX()+boundingBox.getWidth());
 			fatherLine[1] = ourDragon.getY();
 			fatherLine[2] = (int) (ourDragon.getFather().getX()+boundingBox.getWidth()/2 );
 			fatherLine[3] = (int) (ourDragon.getFather().getY()+boundingBox.getHeight());
 		}
-		
-	}	
+	}
 	
 	/**
 	 * Assuming constant motion on all levels, moves all objects involved in displaying a dragon
 	 * @param dx intager how much x moved.
 	 * @param dy intager how much y moved.
 	 */
-	 public void translate(int dx, int dy){
-	 	this.boundingBox.translate(dx,dy);
-	 	motherLine[0] = motherLine[0] + dx;
-	 	motherLine[1] = motherLine[1] + dy;
-	 	motherLine[2] = motherLine[2] + dx;
-	 	motherLine[3] = motherLine[3] + dy;
-	 	fatherLine[0] = fatherLine[0] + dx;
-	 	fatherLine[1] = fatherLine[1] + dy;
-	 	fatherLine[2] = fatherLine[2] + dx;
-	 	fatherLine[3] = fatherLine[3] + dy;
-	 	
-	 }
+	public void translate(int dx, int dy){
+		this.boundingBox.translate(dx,dy);
+		motherLine[0] = motherLine[0] + dx;
+		motherLine[1] = motherLine[1] + dy;
+		motherLine[2] = motherLine[2] + dx;
+		motherLine[3] = motherLine[3] + dy;
+		fatherLine[0] = fatherLine[0] + dx;
+		fatherLine[1] = fatherLine[1] + dy;
+		fatherLine[2] = fatherLine[2] + dx;
+		fatherLine[3] = fatherLine[3] + dy;
+	}
 	
 	/**
 	 * Get the dragon associated with this object.

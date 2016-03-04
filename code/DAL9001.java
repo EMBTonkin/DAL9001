@@ -49,6 +49,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashSet;	
 import java.util.Iterator;
+import java.util.Collections;
 
 import java.io.FileNotFoundException;
 
@@ -461,6 +462,36 @@ public class DAL9001 extends JFrame{
 		}		
 	}
 	
+	/**
+	 * Function that puts the dragons back in a basic grid
+	 * Y axis is by gen
+	 * X axis is by ID number
+	 */
+	public void reset(){
+		int gen = 1;
+		HashSet<Dragon> thisGen = (HashSet<Dragon>) tree.getGeneration(gen);
+		while (thisGen.size() > 0){
+			thisGen = (HashSet<Dragon>) tree.getGeneration(gen);
+			// why are we using an unordered set?  Grumble grumble grumble
+			// Sort the dragons within the generation
+			ArrayList<Dragon> sortedList = new ArrayList<Dragon>(thisGen);
+			Collections.sort(sortedList, tree.getComparitor());
+			for (int num = 0; num < sortedList.size(); num++){
+				// find new location, update the stuff, and re-draw the lines in case they moved drastically
+				Dragon current = sortedList.get(num);
+				int dx = (num+1)*100 - current.getX();
+				current.setX((num+1)*100);
+				int dy = gen*100 - current.getY();
+				current.setY(gen*100);
+				current.getDragonDisplay().translate(dx,dy);
+				current.getDragonDisplay().updateLines();
+			}
+			gen += 1;
+		}
+		// update the display to show the reset dragons
+		HashSet<Dragon> dragons = (HashSet<Dragon>) tree.getDragonsByExalted(false);
+		canvas.update(dragons);
+	}
 	
 	/**
 	 * Quits the program.
@@ -490,7 +521,7 @@ public class DAL9001 extends JFrame{
 				saveDRGFile();
 			}
 			else if( event.getActionCommand().equalsIgnoreCase("Reset") ) {
-				System.out.println("Nothing to reset yet");
+				reset();
 			}
 			
 			

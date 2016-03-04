@@ -41,6 +41,9 @@ import javax.xml.transform.stream.StreamResult;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Arrays;
+import java.util.Comparator;
+
+import java.lang.Integer;
 
 /**
  * DragonTree class, contains dragons and organizes them.  This is the Model of our Model View Controller.  I think.<br>
@@ -390,6 +393,28 @@ public class DragonTree{
 		System.arraycopy(a, 0, c, 0, aLen);
 		System.arraycopy(b, 0, c, aLen, bLen);
 		return c;
+	}
+	
+	
+	/**
+	 * Returns a comparator that sorts Dragons by their ID number (numerically)
+	 */
+	public DragonComparatorByID getComparitor(){
+		return new DragonComparatorByID();
+	}
+	
+	
+	/**
+	 * Comparator class implements Comparator for Dragons
+	 * Sorts them numerically by ID
+	 */
+	private class DragonComparatorByID implements Comparator<Dragon> {
+		// does the comparator thing, whatever that thing is.
+		public int compare(Dragon drag1, Dragon drag2) {
+			Integer one = Integer.parseInt(drag1.getID());
+			Integer two = Integer.parseInt(drag2.getID());
+			return one.compareTo(two);
+		}
 	}
 	
 	
