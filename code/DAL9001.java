@@ -28,6 +28,7 @@ import javax.swing.JFrame;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JButton;
+import javax.swing.JToggleButton;
 import javax.swing.JLabel;
 import javax.swing.JFileChooser;
 import javax.swing.JTextField;
@@ -62,10 +63,13 @@ public class DAL9001 extends JFrame{
 	
 	private Display canvas; // the view
 	private DragonTree tree; // the model
+	private Analysis analysis; // Local analysis instance
+	private Dragon activeDragon; // the currently selected dragon
 	private int baseX; // used to handle mouse dragging
 	private int baseY; // used to handle mouse dragging
-	private Dragon activeDragon;
-	private Analysis analysis;
+	private JButton edit; // buttons that get activated and de-activated, thus need constant reference
+	private JToggleButton move; // buttons that get activated and de-activated, thus need constant reference
+	private boolean moving; // how do we interoperate mouse drags
 	
 	
 	/**
@@ -110,6 +114,15 @@ public class DAL9001 extends JFrame{
 		JButton reset = new JButton("Reset");
 		reset.addActionListener(control);
 		
+		this.edit = new JButton("Edit");
+		this.edit.addActionListener(control);
+		this.edit.setEnabled(false);
+		
+		this.move = new JToggleButton("Move");
+		this.move.addActionListener(control);
+		this.move.setEnabled(false);
+		this.moving = false;
+		
 		JButton quit = new JButton("Quit");
 		quit.addActionListener(control);
 		
@@ -122,6 +135,8 @@ public class DAL9001 extends JFrame{
 		panel.add(save);
 		panel.add(add);
 		panel.add(reset);
+		panel.add(edit);
+		panel.add(move);
 		panel.add(quit);
 		panel.setPreferredSize(new Dimension(200, 1000)); // nessasarry to set all three for a fixed size.
 		panel.setMaximumSize(new Dimension(200, 1000));
@@ -523,8 +538,6 @@ public class DAL9001 extends JFrame{
 			else if( event.getActionCommand().equalsIgnoreCase("Reset") ) {
 				reset();
 			}
-			
-			
 			else if( event.getActionCommand().equalsIgnoreCase("Add") ) {
 				System.out.println("Add a dragon");
 				String[] results = addDragonDialog();
@@ -569,6 +582,23 @@ public class DAL9001 extends JFrame{
 				canvas.update(dragons);
 				System.out.println("Dragon added!");	
 			}
+			else if( event.getActionCommand().equalsIgnoreCase("Edit") ) {
+				System.out.println("Edit");
+			}
+			// move button is a toggle button, so turns on and off
+			else if( event.getActionCommand().equalsIgnoreCase("Move") ) {
+				// make sure there is an active dragon (this button should not be active if there is not but just in case)
+				if (activeDragon != null){
+					// if we are already moving stop
+					if (moving){
+						moving = false;
+					}
+					// if we are not moving, begin
+					else {
+						moving = true;
+					}
+				}
+			}
 		}	
 	}
 	
@@ -593,6 +623,8 @@ public class DAL9001 extends JFrame{
 			}
 			// if we clicked a dragon, set it to the active dragon
 			if (clickedDragon != null){
+				move.setEnabled(true);
+				edit.setEnabled(true);
 				activeDragon = clickedDragon;
 				canvas.setActiveDragon(clickedDragon);
 			}
@@ -600,6 +632,11 @@ public class DAL9001 extends JFrame{
 			else if (activeDragon != null){
 				activeDragon = null;
 				canvas.setActiveDragon(clickedDragon);
+				// also make sure we stop the move function if we were, disable moving and editing
+				move.setEnabled(false);
+				move.setSelected(false);
+				moving = false;
+				edit.setEnabled(false);
 			}
 			// update the dragon display area to reflect which dragon is active
 			canvas.update(dragons);
@@ -642,25 +679,41 @@ public class DAL9001 extends JFrame{
 		public void mouseDragged(MouseEvent e) {
 			int dx = e.getX()-baseX;
 			int dy = e.getY()-baseY;
-			// Get the active dragons
+			// Get the non exalted dragons
 			HashSet<Dragon> dragons = (HashSet<Dragon>) tree.getDragonsByExalted(false);
-			// create an iterator
-			Iterator<Dragon> iterator = dragons.iterator(); 
-			// update x and y values by the delta
-			while (iterator.hasNext()){
-				Dragon current = iterator.next();
+			// if we are only moving one dragon
+			if (moving){
+				// move the active dragon, update it's lines and image & stuff
+				Dragon current = activeDragon;
 				current.setX(current.getX()+dx);
 				current.setY(current.getY()+dy); 
 				current.getDragonDisplay().translate(dx,dy);
+				current.getDragonDisplay().updateLines();
+				// update the lines of the children to point to the new location
+				String[] children = current.getChildren();
+				for (int j = 0; j < children.length; j++){
+					Dragon child = tree.getDragonByID(children[j]);
+					child.getDragonDisplay().updateLines();
+				}
 			}
+			// we are moving ALL the dragons!
+			else{
+				// create an iterator
+				Iterator<Dragon> iterator = dragons.iterator(); 
+				// update x and y values by the delta
+				while (iterator.hasNext()){
+					Dragon current = iterator.next();
+					current.setX(current.getX()+dx);
+					current.setY(current.getY()+dy); 
+					current.getDragonDisplay().translate(dx,dy);
+				}
+			}
+			// update the display with all the dragons
+			canvas.update(dragons);
 			// need to reset the base stuff every time this function is called
 			baseX = e.getX();
 			baseY = e.getY();
-			// display the changes
-			canvas.update(dragons);
-			
 		}
-
 	}	
 	
 	
