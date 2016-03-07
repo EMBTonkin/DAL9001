@@ -539,7 +539,6 @@ public class DAL9001 extends JFrame{
 				reset();
 			}
 			else if( event.getActionCommand().equalsIgnoreCase("Add") ) {
-				System.out.println("Add a dragon");
 				String[] results = addDragonDialog();
 				Dragon n00b = new Dragon(tree.getDocument());
 				n00b.setName(results[0]);
@@ -580,10 +579,60 @@ public class DAL9001 extends JFrame{
 				// display the changes
 				HashSet<Dragon> dragons = (HashSet<Dragon>) tree.getDragonsByExalted(false);
 				canvas.update(dragons);
-				System.out.println("Dragon added!");	
 			}
 			else if( event.getActionCommand().equalsIgnoreCase("Edit") ) {
-				System.out.println("Edit");
+				Dragon changer = activeDragon;
+				String mt = "Male";
+				if (changer.getMatingType()){
+					mt = "Female";
+				}
+				String[] params = {changer.getName(), changer.getID(), changer.getImage(), changer.getHatchDay(),
+								   mt, changer.getSpecies(),
+								   changer.getMother().getID(),changer.getFather().getID(),
+								   changer.getColor(1),changer.getGene(1),
+								   changer.getColor(2),changer.getGene(2),
+								   changer.getColor(3),changer.getGene(3),
+								   changer.getComment()};
+				String[] results = addDragonDialog(params);
+				
+				changer.setName(results[0]);
+				changer.setID(results[1]);
+				changer.setHatchDay(results[3]);
+				if (results[4].equals("Male")){
+					changer.setMatingType(false);
+				}
+				else{
+					changer.setMatingType(true);
+				}
+				changer.setSpecies(results[5]);
+				
+				// Not allowing changing of parents for now.
+				/*
+				String[] parents = new String[0];
+				if (!results[6].equals("")) {
+					String[] mom = {results[6]};
+					String[] moreparents = tree.concatinate(parents, mom);
+					changer.setParents(moreparents);
+				}
+				parents = changer.getParents();
+				if (!results[7].equals("")){
+					String[] dad = {results[7]};
+					String[] moreparents = tree.concatinate(parents, dad);
+					changer.setParents(moreparents);
+				}
+				*/
+				changer.setColor(1,results[8]);
+				changer.setColor(2,results[10]);
+				changer.setColor(3,results[12]);
+				changer.setGene(1,results[9]);
+				changer.setGene(2,results[11]);
+				changer.setGene(3,results[13]);
+				changer.setComment(results[14]);
+				changer.setImage(results[2]);
+				changer.setExalted(false);
+				
+				// display the changes
+				canvas.setActiveDragon(activeDragon);
 			}
 			// move button is a toggle button, so turns on and off
 			else if( event.getActionCommand().equalsIgnoreCase("Move") ) {
