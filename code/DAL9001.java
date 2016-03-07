@@ -586,9 +586,17 @@ public class DAL9001 extends JFrame{
 				if (changer.getMatingType()){
 					mt = "Female";
 				}
+				String mumID = "";
+				if (changer.getMother() != null){
+					mumID = changer.getMother().getID();
+				}
+				String dadID = "";
+				if (changer.getFather() != null){
+					dadID = changer.getFather().getID();
+				}
 				String[] params = {changer.getName(), changer.getID(), changer.getImage(), changer.getHatchDay(),
 								   mt, changer.getSpecies(),
-								   changer.getMother().getID(),changer.getFather().getID(),
+								   mumID,dadID,
 								   changer.getColor(1),changer.getGene(1),
 								   changer.getColor(2),changer.getGene(2),
 								   changer.getColor(3),changer.getGene(3),
