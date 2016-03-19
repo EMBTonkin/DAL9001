@@ -428,10 +428,11 @@ public class DragonTree{
 		DragonTree lair = new DragonTree();
 		// add a 'blank' dragon template
 		Dragon derg = new Dragon( lair.getDocument() );
+		// give the dragon an ID before you add it so you can get it back.
+		derg.setID( "15" );
+		// now it is safe to add
 		lair.addDragon( derg );
 				
-		// give the previously-added dragon an ID
-		derg.setID( "15" );
 		System.out.println( "derg ID set to " + derg.getID() );
 		// search for different ID, should get "null"
 		derg = lair.getDragonByID( "1" );
@@ -499,6 +500,7 @@ public class DragonTree{
 		derg.setID( "7" );
 		derg.setMatingType( true );
 		lair.addDragon(derg);
+		derg = lair.getDragonByID("7");
 		
 		// verify that the mother is not a physical Dragon object
 		System.out.println("\nCheck that a mother dragon does not exist");
@@ -531,6 +533,7 @@ public class DragonTree{
 		derg.setID( "8" );
 		derg.setMatingType(false);
 		lair.addDragon(derg);
+		derg = lair.getDragonByID("8");
 		
 		// verify that the mother is a physical Dragon object
 		System.out.println("\nCheck that a mother dragon exists");
@@ -562,6 +565,7 @@ public class DragonTree{
 		derg.setName( "HarryPotter" );
 		derg.setID( "9" );
 		lair.addDragon(derg);
+		derg = lair.getDragonByID("9");
 		
 		// verify that the mother is a physical Dragon object
 		System.out.println("\nCheck that a mother dragon exists");
