@@ -429,15 +429,11 @@ public class DragonTree{
 		DragonTree lair = new DragonTree();
 		// add a 'blank' dragon template
 		Dragon derg = new Dragon( lair.getDocument() );
+		// give the dragon an ID before you add it so you can get it back.
 		derg.setID( "15" );
-		
+		// now it is safe to add
 		lair.addDragon( derg );
 				
-		// give the previously-added dragon an ID
-		System.out.println("ID of the dragon");
-		System.out.println(derg.getID());
-		System.out.println("ID of the dragon/");
-		
 		System.out.println( "derg ID set to " + derg.getID() );
 		// search for different ID, should get "null"
 		derg = lair.getDragonByID( "1" );
@@ -445,13 +441,10 @@ public class DragonTree{
 		// search for same ID, should get the above Dragon
 		derg = lair.getDragonByID( "15" );
 		System.out.println( "'" + derg + "' should have ID 15" );
-		System.out.println("AAAAAAAAAAAAA");
-		System.out.println(derg);
 		// test search-for-gen
 			// set previous derg's gen
 		derg.setGen( 1 );
 			// add two more dergs at gen2
-		System.out.println("AAAAAAAAAAAAA");
 		derg = new Dragon( lair.getDocument() );
 		derg.setGen( 2 );
 		derg.setName( "Bob" );
