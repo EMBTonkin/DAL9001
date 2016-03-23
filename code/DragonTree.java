@@ -221,7 +221,6 @@ public class DragonTree{
 		tree.adoptNode( newNode );
 		tree.getElementsByTagName("Family").item(0).appendChild( newNode ); // only a single Family tag thus far in the XML spec
 		
-		
 		// Re-create all the dragon objects because something is wrong somewhere (see above)
 		NodeList nList = tree.getElementsByTagName("Dragon");
 		allDragonList = new Dragon[nList.getLength()];
@@ -267,7 +266,9 @@ public class DragonTree{
 		for( Dragon d : allDragonList )
 		{
 			//System.out.println( "getDragonByID: param = '" + ID + "' ?= '" + d.getID() + "'" );
-			
+			//System.out.println("loop");
+			//System.out.println(d.getID());
+			//System.out.println("loop/");
 			if( d.getID().equals(ID) )
 				return d; // only one dragon can have a given ID, so no need to keep looking.
 		}
@@ -428,10 +429,15 @@ public class DragonTree{
 		DragonTree lair = new DragonTree();
 		// add a 'blank' dragon template
 		Dragon derg = new Dragon( lair.getDocument() );
+		derg.setID( "15" );
+		
 		lair.addDragon( derg );
 				
 		// give the previously-added dragon an ID
-		derg.setID( "15" );
+		System.out.println("ID of the dragon");
+		System.out.println(derg.getID());
+		System.out.println("ID of the dragon/");
+		
 		System.out.println( "derg ID set to " + derg.getID() );
 		// search for different ID, should get "null"
 		derg = lair.getDragonByID( "1" );
@@ -439,11 +445,13 @@ public class DragonTree{
 		// search for same ID, should get the above Dragon
 		derg = lair.getDragonByID( "15" );
 		System.out.println( "'" + derg + "' should have ID 15" );
-		
+		System.out.println("AAAAAAAAAAAAA");
+		System.out.println(derg);
 		// test search-for-gen
 			// set previous derg's gen
 		derg.setGen( 1 );
 			// add two more dergs at gen2
+		System.out.println("AAAAAAAAAAAAA");
 		derg = new Dragon( lair.getDocument() );
 		derg.setGen( 2 );
 		derg.setName( "Bob" );
@@ -499,6 +507,7 @@ public class DragonTree{
 		derg.setID( "7" );
 		derg.setMatingType( true );
 		lair.addDragon(derg);
+		derg = lair.getDragonByID("7");
 		
 		// verify that the mother is not a physical Dragon object
 		System.out.println("\nCheck that a mother dragon does not exist");
@@ -531,6 +540,7 @@ public class DragonTree{
 		derg.setID( "8" );
 		derg.setMatingType(false);
 		lair.addDragon(derg);
+		derg = lair.getDragonByID("8");
 		
 		// verify that the mother is a physical Dragon object
 		System.out.println("\nCheck that a mother dragon exists");
@@ -562,6 +572,7 @@ public class DragonTree{
 		derg.setName( "HarryPotter" );
 		derg.setID( "9" );
 		lair.addDragon(derg);
+		derg = lair.getDragonByID("9");
 		
 		// verify that the mother is a physical Dragon object
 		System.out.println("\nCheck that a mother dragon exists");

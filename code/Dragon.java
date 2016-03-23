@@ -189,7 +189,6 @@ public class Dragon{
 		
 		// System.out.println( doc + ", size: " + doc.getElementsByTagName("*").getLength() );
 		
-		
 		// apparently printing a Document to System.out is long:
 		try
 		{
@@ -201,12 +200,14 @@ public class Dragon{
 			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 		
-			transformer.transform(new DOMSource(doc), new StreamResult(new OutputStreamWriter(System.out, "UTF-8")));
+			// this line was only a print statement, right?  -LT
+			//transformer.transform(new DOMSource(doc), new StreamResult(new OutputStreamWriter(System.out, "UTF-8")));
 		}
 		catch( Exception e )
 		{
 			System.out.println( e.getMessage() );
 		}
+		
 		
 		// create, then add the Dragon Display object.
 		DragonDisplay placeholder = new DragonDisplay(this);
