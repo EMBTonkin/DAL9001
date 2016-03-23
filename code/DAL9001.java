@@ -533,7 +533,7 @@ public class DAL9001 extends JFrame{
 		// if we had more than three real results, create a scroll panel
 		if (resulting>3){
 			JScrollPane scroll = new JScrollPane ( container,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
-			scroll.setPreferredSize(new Dimension(300, 500));
+			scroll.setPreferredSize(new Dimension(scroll.getPreferredSize().width+20, 500));
 			JOptionPane.showMessageDialog(null, scroll, "Optimal Pairings", JOptionPane.PLAIN_MESSAGE);
 		}
 		// otherwise just a normal window will do
