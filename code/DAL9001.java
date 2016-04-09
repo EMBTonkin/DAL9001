@@ -36,6 +36,7 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.ImageIcon;
 import javax.swing.BoxLayout;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
@@ -123,10 +124,11 @@ public class DAL9001 extends JFrame{
 		this.move.setEnabled(false);
 		this.moving = false;
 		
+		JButton optimize = new JButton("Optimize");
+		optimize.addActionListener(control);
+		
 		JButton quit = new JButton("Quit");
 		quit.addActionListener(control);
-		
-		
 		
 		JPanel panel = new JPanel();
 		
@@ -137,6 +139,7 @@ public class DAL9001 extends JFrame{
 		panel.add(reset);
 		panel.add(edit);
 		panel.add(move);
+		panel.add(optimize);
 		panel.add(quit);
 		panel.setPreferredSize(new Dimension(200, 1000)); // nessasarry to set all three for a fixed size.
 		panel.setMaximumSize(new Dimension(200, 1000));
@@ -158,6 +161,12 @@ public class DAL9001 extends JFrame{
 		canvas.setActiveDragon(this.activeDragon);
 		
 	}
+	
+	
+	
+	/******************************************************
+				Dialog Boxes and the Like
+	******************************************************/
 	
 	
 	/**
@@ -424,6 +433,117 @@ public class DAL9001 extends JFrame{
 	
 	
 	/**
+	 * Creates a dialog with drop down menus for you to choose your optimal offspring
+	 * Is paired with bestParents() in Analysis to help you find the best parent dragons to get a particular child dragon.
+	 *
+	 * @return a list of string versions of all chosen parameters, in the order they are accepted by the algorithm.
+	 */
+	public String[] optemizerDialog(){
+		// set up lists and drop down menues
+		String[] breedNames = {"","Fae","Guardian","Mirror","Pearlcatcher","Ridgeback","Tundra","Spiral","Imperial","Snapper","Wildclaw","Nocturne","Coatl","Skydancer"};
+		String[] geneNames1	= {"","Basic","Iridescent","Tiger","Clown","Speckle","Ripple","Bar","Crystal","Vipera","Piebald","Cherub", "Poison"};
+		String[] geneNames2 = {"","Basic","Shimmer","Stripes","Eye Spots","Freckle","Seraph","Current","Daub","Facet","Hypnotic","Paint","Peregrine", "Toxin","Butterfly"};
+		String[] geneNames3 = {"","Basic","Circuit","Gembond","Underbelly","Crackle","Smoke","Spines","Okapi","Glimmer","Thylacine","Stained"};
+		String[] colorNames = {"","Maize","White","Ice","Platinum","Silver","Gray","Charcoal","Coal","Black","Obsidian","Midnight","Shadow","Mulberry","Thistle","Lavender","Purple","Violet","Royal","Storm","Navy","Blue","Splash","Sky","Stonewash","Steel","Denim","Azure","Caribbean","Teal","Aqua","Seafoam","Jade","Emerald","Jungle","Forest","Swamp","Avocado","Green","Leaf","Spring","Goldenrod","Lemon","Banana","Ivory","Gold","Sunshine","Orange","Fire","Tangerine","Sand","Beige","Stone","Slate","Soil","Brown","Chocolate","Rust","Tomato","Crimson","Blood","Maroon","Red","Carmine","Coral","Magenta","Pink","Rose"};
+		Integer[] numResultsOptions = {1,2,3,4,5,6,7,8,9,10};
+		Boolean[] bools = {true,false};
+		JComboBox<String> breed = new JComboBox<String>(breedNames);
+		JComboBox<String> color1 = new JComboBox<String>(colorNames);
+		JComboBox<String> color2 = new JComboBox<String>(colorNames);
+		JComboBox<String> color3 = new JComboBox<String>(colorNames);
+		JComboBox<String> gene1 = new JComboBox<String>(geneNames1);
+		JComboBox<String> gene2 = new JComboBox<String>(geneNames2);
+		JComboBox<String> gene3 = new JComboBox<String>(geneNames3);
+		JComboBox<Integer> numResults = new JComboBox<Integer>(numResultsOptions);
+		JComboBox<Boolean> repetition = new JComboBox<Boolean>(bools);
+		
+		GridLayout experimentLayout = new GridLayout(0,2);
+		// add them to the container
+		JPanel container = new JPanel();
+		container.setLayout(experimentLayout);
+		container.add(new JLabel("Breed"));
+		container.add(breed);
+		container.add(new JLabel("Primary"));
+		container.add(new JLabel(" "));
+		container.add(color1);
+		container.add(gene1);
+		container.add(new JLabel("Secondary"));
+		container.add(new JLabel(" "));
+		container.add(color2);
+		container.add(gene2);
+		container.add(new JLabel("Tertiary"));
+		container.add(new JLabel(" "));
+		container.add(color3);
+		container.add(gene3);
+		container.add(new JLabel("Results number"));
+		container.add(numResults);
+		container.add(new JLabel("Repeat Dragons"));
+		container.add(repetition);
+		
+		// create a dialog
+		JOptionPane.showMessageDialog(null, container, "Enter Preferred Results", JOptionPane.PLAIN_MESSAGE);
+		
+		// collate the results
+		String[] results = {(String)breed.getSelectedItem(),
+							(String)color1.getSelectedItem(),(String)gene1.getSelectedItem(),
+							(String)color2.getSelectedItem(),(String)gene2.getSelectedItem(),
+							(String)color3.getSelectedItem(),(String)gene3.getSelectedItem(),
+							Integer.toString((int)numResults.getSelectedItem()),Boolean.toString((boolean)repetition.getSelectedItem()),
+							};
+		
+		// drop down menues so no need for validation
+		return results;
+	}
+	
+	
+	/**
+	 * Display the results from the BestParents function 
+	 * We will have gotten a list of dragon pairs, so display those pairs in an easy to view way with their probability
+	 *
+	 * @param preferences the preferred offspring traits are needed so we can calculate the probability
+	 * @param pairings list of strings, where each string is one end of the parent ID separated by '/'
+	 */
+	public void optemizerResultWindow(String[] preferences, String[] pairings){
+		// begin by creating a window
+		GridLayout experimentLayout = new GridLayout(0,3);
+		JPanel container = new JPanel();
+		container.setLayout(experimentLayout);
+		
+		int resulting =0;// to find how many actual results we got
+		// for each result
+		for (int i =0; i<pairings.length;i++){
+			// skip null results
+			if (pairings[i] == null){
+				continue;
+			}
+			// otherwise, display a row of headshot, blank, headshot
+			// and a row of name (ID), probability, name (ID)
+			resulting+=1;
+			Dragon derg1 = tree.getDragonByID(pairings[i].split("/")[0]);
+			Dragon derg2 = tree.getDragonByID(pairings[i].split("/")[1]);
+			container.add(new JLabel(new ImageIcon(derg1.getDragonDisplay().getImage())));
+			container.add(new JLabel(" "));
+			container.add(new JLabel(new ImageIcon(derg2.getDragonDisplay().getImage())));
+			
+			container.add(new JLabel(derg1.getName()+" ("+derg1.getID()+") "));
+			container.add(new JLabel(Float.toString(analysis.probability(derg1,derg2,preferences[0],preferences[1],preferences[2],preferences[3],preferences[4],preferences[5],preferences[6])*100)+"% "));
+			container.add(new JLabel(derg2.getName()+" ("+derg2.getID()+") "));
+		}
+		
+		// if we had more than three real results, create a scroll panel
+		if (resulting>3){
+			JScrollPane scroll = new JScrollPane ( container,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
+			scroll.setPreferredSize(new Dimension(scroll.getPreferredSize().width+20, 500));
+			JOptionPane.showMessageDialog(null, scroll, "Optimal Pairings", JOptionPane.PLAIN_MESSAGE);
+		}
+		// otherwise just a normal window will do
+		else{
+			JOptionPane.showMessageDialog(null, container, "Optimal Pairings", JOptionPane.PLAIN_MESSAGE);
+		}
+	}
+	
+	
+	/**
 	 * Creates a file dialog and then loads a selected DRG file into the program
 	 */
 	public void openDRGFile(){
@@ -517,6 +637,10 @@ public class DAL9001 extends JFrame{
 	
 	
 	
+	/******************************************************
+				Controle / listener objects
+	******************************************************/
+	
 	
 	/**
 	 * Inner class that will hopefully to all the listening for key and button stuff
@@ -529,17 +653,26 @@ public class DAL9001 extends JFrame{
 			if( event.getActionCommand().equalsIgnoreCase("Quit") ) {
 				quit();
 			}
+			
+			// if the open button is pressed call the open function
 			else if( event.getActionCommand().equalsIgnoreCase("Open") ) {
 				openDRGFile();
 			}
+			
+			// if the save button is pressed call the save function
 			else if( event.getActionCommand().equalsIgnoreCase("Save") ) {
 				saveDRGFile();
 			}
+			
+			// if the reset button is pressed call the rest function
 			else if( event.getActionCommand().equalsIgnoreCase("Reset") ) {
 				reset();
 			}
+			
+			// if the add button is pressed open the add dialog and implement the results
 			else if( event.getActionCommand().equalsIgnoreCase("Add") ) {
 				String[] results = addDragonDialog();
+				// create new dragon and set fields
 				Dragon n00b = new Dragon(tree.getDocument());
 				n00b.setName(results[0]);
 				n00b.setID(results[1]);
@@ -573,14 +706,16 @@ public class DAL9001 extends JFrame{
 				n00b.setComment(results[14]);
 				n00b.setImage(results[2]);
 				n00b.setExalted(false);
-				
+				// add our new dragon
 				tree.addDragon(n00b);
-				
 				// display the changes
 				HashSet<Dragon> dragons = (HashSet<Dragon>) tree.getDragonsByExalted(false);
 				canvas.update(dragons);
 			}
+			
+			// if the edit button is pressed open the add dialog and implement the results
 			else if( event.getActionCommand().equalsIgnoreCase("Edit") ) {
+				// get data of the active dragon
 				Dragon changer = activeDragon;
 				String mt = "Male";
 				if (changer.getMatingType()){
@@ -594,6 +729,7 @@ public class DAL9001 extends JFrame{
 				if (changer.getFather() != null){
 					dadID = changer.getFather().getID();
 				}
+				// create our list of parameters
 				String[] params = {changer.getName(), changer.getID(), changer.getImage(), changer.getHatchDay(),
 								   mt, changer.getSpecies(),
 								   mumID,dadID,
@@ -601,8 +737,9 @@ public class DAL9001 extends JFrame{
 								   changer.getColor(2),changer.getGene(2),
 								   changer.getColor(3),changer.getGene(3),
 								   changer.getComment()};
+				// get new parameters
 				String[] results = addDragonDialog(params);
-				
+				// set the dragon's fuelds to new info.
 				changer.setName(results[0]);
 				changer.setID(results[1]);
 				changer.setHatchDay(results[3]);
@@ -642,6 +779,7 @@ public class DAL9001 extends JFrame{
 				// display the changes
 				canvas.setActiveDragon(activeDragon);
 			}
+			
 			// move button is a toggle button, so turns on and off
 			else if( event.getActionCommand().equalsIgnoreCase("Move") ) {
 				// make sure there is an active dragon (this button should not be active if there is not but just in case)
@@ -656,6 +794,15 @@ public class DAL9001 extends JFrame{
 					}
 				}
 			}
+			
+			// if the optimize button is pressed optimize the add dialog, and then run the algorythm
+			else if( event.getActionCommand().equalsIgnoreCase("Optimize") ) {
+				String[] preferences = optemizerDialog();
+				ArrayList<Dragon> dragonList = new ArrayList<Dragon>(tree.getDragonsByExalted(false));
+				String results[] = analysis.bestParents(dragonList, preferences[0],preferences[1],preferences[2],preferences[3],preferences[4],preferences[5],preferences[6],preferences[7],preferences[8]);
+				System.out.println(Arrays.toString(results));
+				optemizerResultWindow(preferences, results);
+			}
 		}	
 	}
 	
@@ -664,7 +811,7 @@ public class DAL9001 extends JFrame{
 	 */
 	private class MouseControl extends MouseInputAdapter{
 			
-		// determine which if any dragon was clicked
+		// clicking event, where we determine which if any dragon was clicked
 		public void mouseClicked(MouseEvent e) {
 			Dragon clickedDragon = null;
 			HashSet<Dragon> dragons = (HashSet<Dragon>) tree.getDragonsByExalted(false);
@@ -699,8 +846,9 @@ public class DAL9001 extends JFrame{
 			canvas.update(dragons);
 		}
 		
-		// calculations for comparison of two dragons
+		// mouse moving event, where we may do calculations for comparison of two dragons
 		public void mouseMoved(MouseEvent e) {
+			// only works if something is active
 			if (activeDragon != null){
 				// find if we are hovering over anything, and if so what
 				Dragon hoverDragon = null;
@@ -715,7 +863,7 @@ public class DAL9001 extends JFrame{
 						hoverDragon = current;
 					}
 				}
-				// if hovering over something and it's not the active one than us, analyze match
+				// if hovering over something and it's not the active one, analyze match
 				if ((hoverDragon != null) && (!hoverDragon.getID().equals(activeDragon.getID()))){
 					canvas.compareDragon(activeDragon,hoverDragon);
 				} 
@@ -726,13 +874,13 @@ public class DAL9001 extends JFrame{
 			}
 		}
 		
-		// get the starting point for dragging
+		// mouse pressed event, where we get the starting point for dragging
 		public void mousePressed(MouseEvent e) {
 			baseX = e.getX();
 			baseY = e.getY();
 		}
 			
-		// image moving calculations
+		// when mouse is dragged (moved with button down), image moving calculations
 		public void mouseDragged(MouseEvent e) {
 			int dx = e.getX()-baseX;
 			int dy = e.getY()-baseY;
@@ -783,7 +931,7 @@ public class DAL9001 extends JFrame{
 	 * @param b a Dragon[] to be concatenated with a
 	 * @return Dragon[] concatenation of a and b
 	 */
-	public Dragon[] concatinate(Dragon[] a, Dragon[] b){
+	private Dragon[] concatinate(Dragon[] a, Dragon[] b){
 		int aLen = a.length;
 		int bLen = b.length;
 		Dragon[] c= new Dragon[aLen+bLen];

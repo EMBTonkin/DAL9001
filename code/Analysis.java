@@ -24,11 +24,24 @@ import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+
+
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
 import java.io.BufferedReader;
 import java.io.IOException;
+
+// testing imports
+import java.io.File;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+
  
 /**
  * Analysis class, contains various functions for analyzing dragons<br>
@@ -132,6 +145,29 @@ public class Analysis{
 		ColorIndex = new HashMap<Integer, String>( indices );
 		//for( String[] s : ColorList )
 		//	System.out.println( s[0] + "," + s[1] );
+	}
+	
+	/**
+	 * Find out if two dragons can breed.
+	 * Currently, only checks if mating types are compatible.
+	 * In the future it will check ancestry too (get on that SS2)
+	 *
+	 * @param drag1, the first of the two comparison Dragons
+	 * @param drag2, the second of the two comparison Dragons
+	 * @return boolean true if they can breed, false if not. 
+	 */
+	public boolean canBreed(Dragon drag1, Dragon drag2){
+		// are the both male or both female?
+		if (drag1.getMatingType()==drag2.getMatingType()) {
+			return false;
+		}
+		
+		// here is where we should do the ancestor check
+		
+		// otherwise, they can have at it.
+		else{
+			return true;
+		}
 	}
 	
 	
@@ -367,6 +403,173 @@ public class Analysis{
 	}
 	
 	/**
+	 * Given two dragons and certain color, gene, and species selections, 
+	 * what is the probability the of the offspring of the two dragons matching the other ?
+	 * note that a blank string signifies a wildcard parameters, meaning you don't care about the result in this category (species breed color).
+	 * note mating type is not considered as it is always 50% regardless of parentage.
+	 *
+	 * @param drag1 the first potential parent Dragon
+	 * @param drag2 the second potential parent Dragon
+	 * @param breed string version of the preferred breed
+	 * @param color1 string version of the preferred primary color
+	 * @param gene1 string version of the preferred primary gene
+	 * @param color2 string version of the preferred secondary color
+	 * @param gene2 string version of the preferred secondary gene
+	 * @param color3 string version of the preferred tertiary color
+	 * @param gene3 string version of the preferred tertiary gene
+	 *
+	 * @return float of the probability of getting the desired outcome from the specified parents.
+	 */
+	public float probability(Dragon drag1, Dragon drag2, String breed, String color1, String gene1, String color2, String gene2, String color3, String gene3){
+		String[] colors = {color1, color2, color3};
+		String[] genes = {gene1, gene2, gene3};
+		
+		// start optimistically with a 100% probability
+		float prob = 1;
+		// if the dragons cannot breed, 0% probability of them getting the desired offspring.
+		if (!canBreed(drag1, drag2)){
+			return 0;
+		}
+		// if the first dragon has the breed
+		if (drag1.getSpecies().equals(breed) ){
+			String result = rarityCompare(drag1.getSpecies(),drag2.getSpecies()).split("/")[0];
+			prob = prob * (Integer.parseInt(result)/ (float)100);
+		}
+		// if the second dragon has the breed
+		else if (drag1.getSpecies().equals(breed) ) {
+			String result = rarityCompare(drag1.getSpecies(),drag2.getSpecies()).split("/")[1];
+			prob = prob * (Integer.parseInt(result)/ (float)100);
+		}
+		//If not a wildcard, then no chance so return 0.
+		else if (!breed.equals("")){
+			return 0;
+		}
+		// check all three layers of gene
+		for (int i = 0; i<genes.length; i++){
+			// if the first dragon has the gene
+			if (drag1.getGene(i+1).equals(genes[i]) ){
+				String result = rarityCompare(drag1.getGene(i+1),drag2.getGene(i+1)).split("/")[0];
+				prob = prob * (Integer.parseInt(result)/ (float)100);
+			}
+			// if the second dragon has the gene
+			else if (drag1.getGene(i+1).equals(genes[i]) ) {
+				String result = rarityCompare(drag1.getGene(i+1),drag2.getGene(i+1)).split("/")[1];
+				prob = prob * (Integer.parseInt(result)/ (float)100);
+			}
+			//If not a wildcard, then no chance so return.
+			else if (!genes[i].equals("")){
+				return 0;
+			}
+		}
+		// check all three layers of color
+		for (int i = 0; i<colors.length; i++){
+			String[] range = getColorRange(drag1.getColor(i+1),drag2.getColor(i+1));
+			// if the desired color is in the range
+			if (Arrays.asList(range).contains(colors[i])){
+				prob = prob * (float)1/range.length;
+			}
+			//If not a wildcard, then no chance so return.
+			else if (!colors[i].equals("")){
+				return 0;
+			}
+		}
+		return prob;
+	}
+	
+	
+	/**
+	 * Given a certain color, gene, species combination, which paring of Dragons in a list of dragons
+	 * would have the best change of producing the desired result?
+	 * number of returned pairings and if dragons can repeat is user specified.
+	 * if dragons cannot repeat, the results are chosen by a greedy method of taking the best result, and skipping the rest that includes dragons in that result.
+	 * note that a blank string signifies a wildcard parameters, meaning you don't care about the result in this category (species breed color).
+	 * note mating type is not considered as it is always 50% regardless of parentage.
+	 *
+	 * @param allDragons an ArrayList of all the Dragons to check
+	 * @param drag2 the second potential parent Dragon
+	 * @param breed string version of the preferred breed
+	 * @param color1 string version of the preferred primary color
+	 * @param gene1 string version of the preferred primary gene
+	 * @param color2 string version of the preferred secondary color
+	 * @param gene2 string version of the preferred secondary gene
+	 * @param color3 string version of the preferred tertiary color
+	 * @param gene3 string version of the preferred tertiary gene
+	 * @param numResults string version of an int of the number of dragon paris to be returned
+	 * @param repetition string version of a boolean representing whether or not dragons can show up in multiple parings.
+	 *
+	 * @return String[] list of dragon pairs in order from highest probability to low, where each pair is a single string with the two IDs separated by '/'  can contain null if not enough pairs can be created for the desired number of output pairs.
+	 */
+	public String[] bestParents(ArrayList<Dragon> allDragons, String breed, String color1, String gene1, String color2, String gene2, String color3, String gene3, String numResults, String repetition){
+		String[] colors = {color1, color2, color3};
+		String[] genes = {gene1, gene2, gene3};
+		// initialize preliminary results
+		ArrayList<String[]> prelimresults = new ArrayList<String[]>();
+		// get each probability for all dragon combos
+		for (int i = 0; i<allDragons.size() ;i++){
+			for (int j = i+1; j<allDragons.size() ;j++){
+				float prob = this.probability(allDragons.get(i), allDragons.get(j), breed, color1, gene1, color2, gene2, color3, gene3);
+				String[] thing = {allDragons.get(i).getID(),allDragons.get(j).getID(), Float.toString(prob)};
+				// add ID of the two dragons and String version of probability as an array
+				prelimresults.add(thing);
+			}
+		}
+		// sort the pairs by their probability, highest to lowest
+		Collections.sort(prelimresults, new StringArrayComparatorBy3rdIndex());
+		//colate real results
+		String[] results  = new String[Integer.parseInt(numResults)];
+		// if dragon repetition allowed, just add first X pairs to real results
+		if (Boolean.parseBoolean(repetition)){
+			for (int i = 0; i<results.length ;i++){
+				results[i] = prelimresults.get(i)[0]+"/"+prelimresults.get(i)[1];
+			}
+			return results;
+		}
+		// otherwise, things get tricky
+		int index = 0; // index of results array
+		int pointer = 0; // index of preliminary results array
+		ArrayList<String> usedIDs = new ArrayList<String>();
+		// while we have not filled up the results array
+		while (pointer < prelimresults.size()){
+			// id the next pair does not have a used dragon ID
+			if (!usedIDs.contains(prelimresults.get(pointer)[0]) && !usedIDs.contains(prelimresults.get(pointer)[1])){
+				// create the result, add these IDs to the used list.
+				results[index] = prelimresults.get(pointer)[0]+"/"+prelimresults.get(pointer)[1];
+				usedIDs.add(prelimresults.get(pointer)[0]);
+				usedIDs.add(prelimresults.get(pointer)[1]);
+				// increment index and pointers
+				index+=1;
+				pointer+=1;
+				// If we've filled results, return them
+				if (index >= results.length){
+					return results;
+				}
+			}
+			// otherwise move on to next pair in the preliminaries
+			else{
+				pointer +=1;
+			}
+		}
+		// return non filled results, it's the best we could do.
+		return results;
+	}
+	
+	
+	/**
+	 * Comparator class implements Comparator for sorting the probability results array from highest to lowest
+	 * Sorts them numerically by ID
+	 */
+	private class StringArrayComparatorBy3rdIndex implements Comparator<String[]> {
+		// does the comparator thing, whatever that thing is.
+		public int compare(String[] list1, String[] list2) {
+			Float one = Float.parseFloat(list1[2]);
+			Float two = Float.parseFloat(list2[2]);
+			return two.compareTo(one);
+		}
+	}
+	
+	
+	
+	/**
 	 * Handy dandy test function
 	 * 
 	 * @param args This parameter is unused.
@@ -479,6 +682,128 @@ public class Analysis{
 		output = module.rarityCompare("Glimmer","Glimmer");
 		System.out.println(output);
 		
+
+		try {
+		
+			System.out.println("\nTest Probabilities");
+			
+			// create the entire document object :/
+			File file = new File("../demo.drg");
+			DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			Document doc = dBuilder.parse(file);
+			NodeList nList = doc.getElementsByTagName("Dragon");
+			
+			// select the dragons for testing
+			Dragon testSubject1 = new Dragon(nList.item(0));
+			Dragon testSubject2 = new Dragon(nList.item(1));
+			
+			// set the dragons to the parameters we want
+			testSubject1.setMatingType(true);
+			testSubject1.setSpecies("Spiral");
+			testSubject1.setGene(1,"Basic");
+			testSubject1.setGene(2,"Shimmer");
+			testSubject1.setGene(3,"Underbelly");
+			testSubject1.setColor(1,"White");
+			testSubject1.setColor(2,"White");
+			testSubject1.setColor(3,"White");
+			
+			testSubject2.setMatingType(false);
+			testSubject2.setSpecies("Spiral");
+			testSubject2.setGene(1,"Basic");
+			testSubject2.setGene(2,"Shimmer");
+			testSubject2.setGene(3,"Underbelly");
+			testSubject2.setColor(1,"White");
+			testSubject2.setColor(2,"White");
+			testSubject2.setColor(3,"White");
+			
+			System.out.println("Compair identical dragons for matching child\nExpected output 1");
+			float result = module.probability(testSubject1, testSubject2, "Spiral","White", "Basic", "White", "Shimmer", "White", "Underbelly");
+			System.out.println(result);
+			
+			testSubject2.setColor(1,"Ice");
+			System.out.println("One color difference\nExpected output 0.5");
+			result = module.probability(testSubject1, testSubject2, "Spiral","White", "Basic", "White", "Shimmer", "White", "Underbelly");
+			System.out.println(result);
+			
+			testSubject2.setColor(2,"Ice");
+			System.out.println("Two one color differences\nExpected output 0.25");
+			result = module.probability(testSubject1, testSubject2, "Spiral","White", "Basic", "White", "Shimmer", "White", "Underbelly");
+			System.out.println(result);
+			
+			testSubject2.setColor(2,"White");
+			testSubject2.setColor(1,"Platinum");
+			System.out.println("One two color difference\nExpected output 0.33333");
+			result = module.probability(testSubject1, testSubject2, "Spiral","White", "Basic", "White", "Shimmer", "White", "Underbelly");
+			System.out.println(result);
+			
+			testSubject2.setColor(1,"White");
+			testSubject2.setSpecies("Tundra");
+			System.out.println("Spiral vs Tundra difference\nExpected output 0.3");
+			result = module.probability(testSubject1, testSubject2, "Spiral","White", "Basic", "White", "Shimmer", "White", "Underbelly");
+			System.out.println(result);
+			
+			testSubject2.setSpecies("Spiral");
+			testSubject2.setGene(2,"Basic");
+			System.out.println("Shimmer vs Basic difference\nExpected output 0.01");
+			result = module.probability(testSubject1, testSubject2, "Spiral","White", "Basic", "White", "Shimmer", "White", "Underbelly");
+			System.out.println(result);
+			
+			testSubject2.setSpecies("Tundra");
+			System.out.println("Shimmer Spiral vs Basic Tundra difference\nExpected output 0.003");
+			result = module.probability(testSubject1, testSubject2, "Spiral","White", "Basic", "White", "Shimmer", "White", "Underbelly");
+			System.out.println(result);
+			
+			System.out.println("Check all possible inputs with a 0\nNext 7 expected results 0");
+			testSubject2.setSpecies("Spiral");
+			testSubject2.setGene(2,"Shimmer");
+			result = module.probability(testSubject1, testSubject2, "Tundra","White", "Basic", "White", "Shimmer", "White", "Underbelly");
+			System.out.println(result);
+			result = module.probability(testSubject1, testSubject2, "Spiral","Black", "Basic", "White", "Shimmer", "White", "Underbelly");
+			System.out.println(result);
+			result = module.probability(testSubject1, testSubject2, "Spiral","White", "Tiger", "White", "Shimmer", "White", "Underbelly");
+			System.out.println(result);
+			result = module.probability(testSubject1, testSubject2, "Spiral","White", "Basic", "Black", "Shimmer", "White", "Underbelly");
+			System.out.println(result);
+			result = module.probability(testSubject1, testSubject2, "Spiral","White", "Basic", "White", "Basic", "White", "Underbelly");
+			System.out.println(result);
+			result = module.probability(testSubject1, testSubject2, "Spiral","White", "Basic", "White", "Shimmer", "Black", "Underbelly");
+			System.out.println(result);
+			result = module.probability(testSubject1, testSubject2, "Spiral","White", "Basic", "White", "Shimmer", "White", "Basic");
+			System.out.println(result);
+			
+			System.out.println("Test Wildcard inputs\nNext 7 expected results 1");
+			result = module.probability(testSubject1, testSubject2, "","White", "Basic", "White", "Shimmer", "White", "Underbelly");
+			System.out.println(result);
+			result = module.probability(testSubject1, testSubject2, "Spiral","", "Basic", "White", "Shimmer", "White", "Underbelly");
+			System.out.println(result);
+			result = module.probability(testSubject1, testSubject2, "Spiral","White", "", "White", "Shimmer", "White", "Underbelly");
+			System.out.println(result);
+			result = module.probability(testSubject1, testSubject2, "Spiral","White", "Basic", "", "Shimmer", "White", "Underbelly");
+			System.out.println(result);
+			result = module.probability(testSubject1, testSubject2, "Spiral","White", "Basic", "White", "", "White", "Underbelly");
+			System.out.println(result);
+			result = module.probability(testSubject1, testSubject2, "Spiral","White", "Basic", "White", "Shimmer", "", "Underbelly");
+			System.out.println(result);
+			result = module.probability(testSubject1, testSubject2, "Spiral","White", "Basic", "White", "Shimmer", "White", "");
+			System.out.println(result);
+			
+			System.out.println("Test with color range, gene mismatch, and wildcards\nExpected result 0.3375");
+			testSubject2.setSpecies("Imperial");// 0.9
+			testSubject2.setGene(1,"Toxin");	// no affect
+			testSubject2.setGene(2,"Shimmer");	// 1
+			testSubject2.setGene(3,"Crackle");	// 0.75
+			testSubject2.setColor(1,"Red");		// no affect
+			testSubject2.setColor(2,"Ice");		// 0.5
+			testSubject2.setColor(3,"White");	// 1
+			
+			result = module.probability(testSubject1, testSubject2, "Spiral","", "", "White", "Shimmer", "White", "Underbelly");
+			System.out.println(result);
+			
+			System.out.println("Stupid floating point error\n");
+		
+		} catch (Exception e) {
+		System.out.println(e.getMessage());
+    	}
 	}
 	
 }

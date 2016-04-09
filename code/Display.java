@@ -267,7 +267,7 @@ class Display extends JPanel{
 			g.setColor(Color.black);
 			
 			// make sure have opposite mating types
-			if (active.getMatingType()==hover.getMatingType()){
+			if (!analysis.canBreed(active,hover)){
 				g.drawString("Incompatible Mating Types :(", 35, 45);
 				return;
 			}
