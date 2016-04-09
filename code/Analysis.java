@@ -23,6 +23,7 @@
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
@@ -273,6 +274,84 @@ public class Analysis{
 		return output;
 	}
 	
+	/**
+	 * Return List of Dragons that are ancestors of both dragon1 and dragon2. 
+	 * This list only looks back 5 generations for each dragon to consider.
+	 *
+	 * @author StrykeSlammerII
+	 */
+	 // test function is in DragonTree.java
+	public List<Dragon> CommonAncestors( Dragon dragon1, Dragon dragon2 )
+	{
+		ArrayList<Dragon> results = new ArrayList<Dragon>();
+		
+		ArrayList<Dragon> set1 = new ArrayList<Dragon>(); // all of dragon1's ancestors
+		ArrayList<Dragon> set2 = new ArrayList<Dragon>(); // all of dragon2's ancestors
+		
+		// since we can't tell which ones were JUST added to set1 and set2...
+		ArrayList<Dragon> lastGen1 = new ArrayList<Dragon>();
+		ArrayList<Dragon> lastGen2 = new ArrayList<Dragon>(); 
+		 // start with the ones we're testing...
+		lastGen1.add( dragon1 );
+		lastGen2.add( dragon2 ); 
+		
+		for( int generation = 1; generation < 6; generation++ )
+		{
+			// gotta save a working copy of both lastGen so we can save the new ones we find...
+			Dragon[] testGen1 = lastGen1.toArray( new Dragon[0] );
+			Dragon[] testGen2 = lastGen2.toArray( new Dragon[0] );
+			lastGen1 = new ArrayList<Dragon>();
+			lastGen2 = new ArrayList<Dragon>();
+			
+			// get ANY and ALL parents from both last sets of dragons found
+			for( Dragon d : testGen1 )
+			{
+				Dragon d1 = d.getFather();
+				Dragon d2 = d.getMother(); 
+				
+				lastGen1.add( d1 );
+				lastGen1.add( d2 );
+				
+				set1.add( d1 );
+				set1.add( d2 );
+			}
+			for( Dragon d : testGen2 )
+			{
+				Dragon d1 = d.getFather();
+				Dragon d2 = d.getMother(); 
+				
+				lastGen2.add( d1 );
+				lastGen2.add( d2 );
+				
+				set2.add( d1 );
+				set2.add( d2 );
+			}
+			
+		}
+		
+		for( Dragon d : set1 )
+		{
+			if( set2.contains( d ) )
+				results.add( d );
+		}
+		
+		return results;
+	}
+	 
+	/**
+	 * Wrapper method for CommonAncestors( dragon1, dragon2)--if that method returns non-empty list, CanBreed returns true. 
+	 *
+	 * @author StrykeSlammerII
+	 */
+	 // test function is in DragonTree.java
+	public boolean CanBreed( Dragon dragon1, Dragon dragon2 )
+	{
+		List test = CommonAncestors( dragon1, dragon2 );
+		if( test != null && test.size() > 0 )
+			return true;
+		// else
+		return false;
+	}
 	
 	/**
 	 * Pretty-print method to verify colorinfo.txt was read correctly.
@@ -286,7 +365,6 @@ public class Analysis{
 		}
 
 	}
-
 	
 	/**
 	 * Handy dandy test function
@@ -304,7 +382,7 @@ public class Analysis{
 			return;
 		}
 
-		module.printColors();
+		// module.printColors();
 		
 		System.out.println( "Hex value of 'Fire' is " + module.getColorHex( "Fire" ) );
 		System.out.println( "Hex value of 'Unobtanium' is " + module.getColorHex( "Unobtanium" ) );
@@ -400,9 +478,6 @@ public class Analysis{
 		System.out.println(output);
 		output = module.rarityCompare("Glimmer","Glimmer");
 		System.out.println(output);
-		
-		
-		
 		
 	}
 	

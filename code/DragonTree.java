@@ -44,6 +44,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 import java.lang.Integer;
+import java.io.FileNotFoundException;
 
 /**
  * DragonTree class, contains dragons and organizes them.  This is the Model of our Model View Controller.  I think.<br>
@@ -504,7 +505,7 @@ public class DragonTree{
 		System.out.println("\nCheck that a mother dragon does not exist");
 		System.out.println(derg.getMother());
 		
-		// verify that the father is mpt a physical Dragon object
+		// verify that the father is not a physical Dragon object
 		System.out.println("\nCheck that a father dragon does not exist");
 		System.out.println(derg.getFather());
 		
@@ -598,6 +599,19 @@ public class DragonTree{
 		for (int i = 1; i <6;i++){
 			System.out.println(Arrays.toString(derg.getDescendants(i)));
 		}
+		
+		
+		Analysis suite;
+		try
+		{
+			suite = new Analysis();
+		}
+		catch( FileNotFoundException e )
+		{
+			return;
+		}
+		
+		suite.CommonAncestors( derg, derg.getMother() );
 		
 	}
 

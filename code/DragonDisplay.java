@@ -60,7 +60,7 @@ class DragonDisplay{
 			}
 			catch (IOException ee) {
 				// OK, now we really have a problem
-				System.out.println("Invalid image: coul not find placeholder image\nABANDON SHIP\n");
+				System.out.println("Invalid image: could not find placeholder image\nABANDON SHIP\n");
 				System.out.println(ee);
 				return;
 			}
