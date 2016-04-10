@@ -615,7 +615,15 @@ public class DragonTree{
 			return;
 		}
 		
-		suite.CommonAncestors( derg, derg.getMother() );
+		System.out.println( "\nCheck common ancestors of most recent derg and its mother" );
+		System.out.println( suite.CommonAncestors( derg, derg.getMother() ) );
+		
+		derg = lair.getDragonByID("9");
+		System.out.println( "\nCheck common ancestors of derg #9 and its mother" );
+		System.out.println( suite.CommonAncestors( derg, derg.getMother() ) );
+		
+		System.out.println( "\nCheck all ancestors of derg #9" );
+		System.out.println( suite.CommonAncestors( derg, derg ) );
 		
 	}
 

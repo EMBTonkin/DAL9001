@@ -313,6 +313,8 @@ public class Analysis{
 	/**
 	 * Return List of Dragons that are ancestors of both dragon1 and dragon2. 
 	 * This list only looks back 5 generations for each dragon to consider.
+	 * Note that either dragon might be an ancestor of the other.
+	 * If dragon1 == dragon2, this returns all five generations of ancestors, if any. 
 	 *
 	 * @author StrykeSlammerII
 	 */
@@ -331,6 +333,9 @@ public class Analysis{
 		lastGen1.add( dragon1 );
 		lastGen2.add( dragon2 ); 
 		
+		set1.add( dragon1 );
+		set2.add( dragon2 );
+		
 		for( int generation = 1; generation < 6; generation++ )
 		{
 			// gotta save a working copy of both lastGen so we can save the new ones we find...
@@ -342,25 +347,41 @@ public class Analysis{
 			// get ANY and ALL parents from both last sets of dragons found
 			for( Dragon d : testGen1 )
 			{
-				Dragon d1 = d.getFather();
-				Dragon d2 = d.getMother(); 
-				
-				lastGen1.add( d1 );
-				lastGen1.add( d2 );
-				
-				set1.add( d1 );
-				set1.add( d2 );
+				if( d != null )
+				{
+					Dragon d1 = d.getFather();
+					if (d1 != null )
+					{
+						lastGen1.add( d1 );
+						set1.add( d1 );
+					}
+					
+					d1 = d.getMother(); 
+					if (d1 != null )
+					{
+						lastGen1.add( d1 );
+						set1.add( d1 );
+					}
+				}
 			}
 			for( Dragon d : testGen2 )
 			{
-				Dragon d1 = d.getFather();
-				Dragon d2 = d.getMother(); 
-				
-				lastGen2.add( d1 );
-				lastGen2.add( d2 );
-				
-				set2.add( d1 );
-				set2.add( d2 );
+				if( d != null )
+				{
+					Dragon d1 = d.getFather();
+					if (d1 != null )
+					{
+						lastGen2.add( d1 );
+						set2.add( d1 );
+					}
+					
+					d1 = d.getMother(); 
+					if (d1 != null )
+					{
+						lastGen2.add( d1 );
+						set2.add( d1 );
+					}
+				}
 			}
 			
 		}
